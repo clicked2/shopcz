@@ -1,1 +1,1 @@
-other message1
+my other
