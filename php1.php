@@ -1,1 +1,1 @@
-mymessage on
+other message
