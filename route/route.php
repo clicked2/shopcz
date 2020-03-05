@@ -12,6 +12,7 @@
 Route::rest('create', ['GET', '/add', 'add']);
 
 Route::resource('goods', 'admin/Goods')->except([])->allowCrossDomain();
+Route::resource('member', 'admin/MemberLevel')->except([])->allowCrossDomain();
 
 return [
 

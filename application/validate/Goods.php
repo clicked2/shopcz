@@ -50,9 +50,6 @@ class Goods extends Validate
         'brand_id.number'      => '品牌id必须是数字',
         'brand_id.between'     => '品牌id不正确',
         'bd_id.max'            => '品牌长度过长',
-        
-
-
     ];
 
     //场景验证设置
