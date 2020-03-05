@@ -18,7 +18,12 @@ create table sc_goods
 	big_logo varchar(150) not null default '' comment '大图',
 	mbig_logo varchar(150) not null default '' comment '更大图',
 	brand_id mediumint unsigned not null default '0' comment '品牌id',
-	primary key (id)
+	primary key (id),
+	key market_price(market_price),
+	key addtime(addtime),
+	key brand_id(brand_id),
+	key is_on_sale(is_on_sale),
+	key is_delete(is_delete)
 
 )engine=InnoDB default charset=utf8 comment '商品';
 
@@ -31,3 +36,23 @@ create table sc_brand
 	logo varchar(150) not null default '' comment '品牌logo图片',
 	primary key (id)
 )engine=InnoDB default charset=utf8 comment '品牌';
+
+drop table if exists sc_member_level;
+create table sc_member_level
+(
+	id mediumint unsigned not null auto_increment comment 'Id',
+	level_name varchar(30) not null comment '级别名称',
+	jifen_top mediumint unsigned not null comment '积分上限',
+	jifen_bottom mediumint unsigned not null comment '积分下限',
+	primary key (id)
+)engine=InnoDB default charset=utf8 comment '会员级别';
+
+drop table if exists sc_member_price;
+create table sc_member_price
+(
+	brand_name decimal(10,2) not null comment '会员价格',
+	goods_id mediumint unsigned not null comment '商品id',
+	level_id mediumint unsigned not null comment '级别id',
+	key level_id(level_id),
+	key goods_id(goods_id)
+)engine=InnoDB default charset=utf8 comment '会员价格';
