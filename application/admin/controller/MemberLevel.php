@@ -6,6 +6,8 @@ use think\Request;
 
 use think\facade\Cache;
 
+
+
 class MemberLevel extends Controller
 {
 	//开启批量验证
@@ -61,10 +63,8 @@ class MemberLevel extends Controller
 	*/
 	public function read($id)
 	{
-		$request = request();
-		//链式查询
-		
-		//self::assign('list', $list);
+		$list = MemberLevelModel::paginate(4);
+		self::assign('list', $list);
 		return view('read');
 	}
 
@@ -89,8 +89,9 @@ class MemberLevel extends Controller
 	*/
 	public function update(Request $request, $id)
 	{
-		
-		return !$goods->save() ? self::error('修改失败: ' . lang('data_insert')) : self::success('修改成功', './goods/read');
+		$level =  MemberLevelModel::get($id);
+		$level->addData($request);
+		return !$level->save() ? self::error('修改失败: ' . lang('data_insert')) : self::success('修改成功', './member/read');
 	}
 	/**
 	* 删除指定资源 DELETE
@@ -100,15 +101,13 @@ class MemberLevel extends Controller
 	*/
 	public function delete($id)
 	{
-		// $goods = GoodsModel::get($id);
-		// if ( $goods ) {
-		// 	if ( $goods->delete() ) {
-		// 		$goods->imageDelete();
-		// 		return json(['id' => $goods->id,'msg' => 'success']);
-		// 	}
-		// }
-		// return json(['error'=> lang('delete_error')]);
-		
+		$member = MemberLevelModel::get($id);
+		if ( $member ) {
+			if ( $member->delete() ) {
+				return json(['id' => $goods->id,'msg' => 'success']);
+			}
+		}
+		return json(['error'=> lang('delete_error')]);
 	}
 
 }

@@ -1,0 +1,40 @@
+{layout name="public/layout"}
+<!-- 列表 -->
+<div class="list-div" id="listDiv">
+	<table cellpadding="3" cellspacing="1">
+    	<tr>
+            <th >级别名称</th>
+            <th >积分下限</th>
+            <th >积分上限</th>
+			<th width="60">操作</th>
+        </tr>
+		{volist name="list" id='obj'}    
+			<tr class="tron">
+				<td>{$obj.level_name}</td>
+				<td>{$obj.jifen_bottom}</td>
+				<td>{$obj.jifen_top}</td>
+		        <td align="center">
+		        	<a href="{$obj.id}/edit" title="编辑">编辑</a> |
+	                <a href="" title="移除" id="{$obj.id}" class="delete">移除</a> 
+		        </td>
+	        </tr>
+	    {/volist}
+      <!--   <tr><td align="right" nowrap="true" colspan="99" height="30"></td></tr> -->
+	</table>
+</div>
+
+<script src="../static/admin/js/tron.js"></script>
+<script src="../static/admin/js/axios.js"></script>
+
+<script>
+//删除
+$('.delete').click(function() {
+    let msg = '确定删除吗?'
+    if ( confirm(msg) ) {
+    	console.log($(this).attr('id'))
+        axios.delete($(this).attr('id')).then(success => {
+        	if (success.data.msg == 'success') window.location.href = window.location.href
+        }).then(error => console.log(error));
+    }
+})
+</script>

@@ -28,15 +28,15 @@ class MemberLevel extends Validate
         'level_name.require'   => '级别名称不能为空',
         'level_name.max'       => '级别名称长度不能超过150字节',
         'jifen_top.number'     => '积分上限必须是数字',
-        'jifen_top.between'    => '积分上限最大不能超过一亿',
+        'jifen_top.between'    => '积分上限最大不能超过一亿 最大值是16777215',
         'jifen_bottom.number'  => '积分下限必须是数字',
-        'jifen_bottom.between' => '积分下限最大不能超过一亿',
+        'jifen_bottom.between' => '积分下限最大不能超过一亿 最大值是16777215',
     ];
 
     //场景验证设置
     protected $scene = [
         'save' => ['level_name', 'jifen_top', 'jifen_bottom'],
-        'update' => [''],
+        'update' => ['level_name', 'jifen_top', 'jifen_bottom'],
         'read' => [''],
         'edit' => [''],
         'delete' => [''],

@@ -1,37 +1,47 @@
-<layout name="layout" />
-
+{//layout name='public/layout'}
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="../../static/admin/css/general.css" rel="stylesheet" type="text/css" />
+<link href="../../static/admin/css/main.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="../../static/admin/css/pagination.css">
+<script type="text/javascript" src="../../static/umeditor1_2_2-utf8-php/third-party/jquery.min.js"></script>
+</head>
+<body>
 <div class="main-div">
-    <form name="main_form" method="POST" action="__SELF__" enctype="multipart/form-data" >
-    	<input type="hidden" name="id" value="<?php echo $data['id']; ?>" />
+    <form name="main_form" method="POST" action="../{$id}" enctype="multipart/form-data" >
+
+        <input type="hidden" name="_method" value="PUT" >
         <table cellspacing="1" cellpadding="3" width="100%">
+            {volist name=':model("member_level")->where("id=$id")->select()' id="obj"}
             <tr>
                 <td class="label">级别名称：</td>
                 <td>
-                    <input  type="text" name="level_name" value="<?php echo $data['level_name']; ?>" />
+                    <input  type="text" name="level_name" value="{$obj.level_name}">
                 </td>
             </tr>
             <tr>
                 <td class="label">积分下限：</td>
                 <td>
-                    <input  type="text" name="jifen_bottom" value="<?php echo $data['jifen_bottom']; ?>" />
+                    <input  type="text" name="jifen_bottom" value="{$obj.jifen_bottom}">
                 </td>
             </tr>
             <tr>
                 <td class="label">积分上限：</td>
                 <td>
-                    <input  type="text" name="jifen_top" value="<?php echo $data['jifen_top']; ?>" />
+                    <input  type="text" name="jifen_top" value="{$obj.jifen_top}">
                 </td>
             </tr>
             <tr>
                 <td colspan="99" align="center">
-                    <input type="submit" class="button" value=" 确定 " />
-                    <input type="reset" class="button" value=" 重置 " />
+                    <input type="submit" class="button" value=" 确定 ">
+                    <input type="reset" class="button" value=" 重置 ">
                 </td>
             </tr>
+            {/volist}
         </table>
     </form>
 </div>
-
-
-<script>
-</script>
+</body>
+</html>
