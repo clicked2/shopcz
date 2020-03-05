@@ -1,0 +1,19 @@
+.pagination {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	list-style: none;
+	width: 100%;
+	height: 50px;
+	box-sizing: border-box;
+}
+.pagination li {
+	margin: 0;
+	padding: 0;
+	line-height: 50px;
+	margin: 0 5px;
+	padding: 0 5px;
+	font-size: 26px;
+	display: inline-block;
+	color: brown;
+}
