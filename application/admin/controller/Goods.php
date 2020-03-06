@@ -55,7 +55,15 @@ class Goods extends Controller
 		$goods = new GoodsModel();
 		//上传logo 添加数据
 		if ( !$goods->logoUpload() ) return self::error('添加失败: ' . $goods->info);
-		return !$goods->save() ? self::error('添加失败: ' . lang('data_insert')) : self::success('添加成功');
+
+		if( !$goods->save() ) {
+			self::error('添加失败: ' . lang('data_insert'));
+		} else {
+			//关联新增 会员价格
+			!$goods->addMemberPrice($request) ? self::error('添加失败: ' . lang('data_insert')) :
+			self::success('添加成功');
+		}
+
 	}
 
 	/**

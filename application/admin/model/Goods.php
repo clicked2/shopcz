@@ -34,7 +34,7 @@ class Goods extends Model
 	}
 	public function memberPrice()
 	{
-		return $this->hasMany('memberPrice')
+		return $this->hasMany('member_price');
 	}
 
 	//设置全局范围查询
@@ -77,15 +77,14 @@ class Goods extends Model
 	{
 		$query->whereBetweenTime('addtime', $value[0], $value[1]);
 	}
-	//创建一个查询范围 模糊搜索品牌名
-	public function scopeBrandName($query, $name)
+	//关联表 新增会员价格
+	public function addMemberPrice($request)
 	{
-		
-		$user = $this->hasWhere('brand', function($brand) {
-			$brand->where('brand.brand_name', 'like', '%苹%');
-		})->select();
-		// $user = $this->hasWhere('brand', ['id' => "1"])->select();
-		var_dump($user);
+		$param = $request->param('member_price');
+		foreach ($param as $key => $value) {
+			$arr[] = ['price' => $value, 'goods_id' => $this->id, 'level_id' => $key];
+		}
+		return $this->memberPrice()->saveAll($arr);
 	}
 
 	//创建一个查询范围 用来做排序 
