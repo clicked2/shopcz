@@ -50,7 +50,7 @@ create table sc_member_level
 drop table if exists sc_member_price;
 create table sc_member_price
 (
-	brand_name decimal(10,2) not null comment '会员价格',
+	price decimal(10,2) not null comment '会员价格',
 	goods_id mediumint unsigned not null comment '商品id',
 	level_id mediumint unsigned not null comment '级别id',
 	key level_id(level_id),
