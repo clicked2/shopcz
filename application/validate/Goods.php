@@ -27,6 +27,7 @@ class Goods extends Validate
         'odby'         => 'max:20',
         'brand_id'     => 'number|between:1,7',
         'bd'           => 'max:150',
+        'member_price' => 'memberPrice',
     ];
  
     /**
@@ -74,6 +75,10 @@ class Goods extends Validate
     protected function isnum($value)
     {
         return $value == '' || is_numeric($value) && $value <= 1e9 ? true : "价格不是有效数字";
+    }
+    protected  function memberPrice($arr)
+    {
+        return in_array($arr) && count($arr) == 4 ? true : '会员价格不正确';
     }
 
 }

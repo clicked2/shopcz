@@ -15,6 +15,9 @@
     <div style="clear:both"></div>
 </h1>
 
+
+
+
 <div class="tab-div">
     <div id="tabbar-div">
         <p>
@@ -60,6 +63,17 @@
                         <span class="require-field">*</span>
                     </td>
                 </tr>
+                <!-- 会员价格 -->
+                {volist name=':model("member_level")->all()' id='obj'}
+                <tr>
+                    <td class="label">{$obj.level_name}：</td>
+                    <td>
+                        <input type="text" name="member_price[{$obj.id}]" size="8">
+                        <span>元</span>
+                    </td>  
+                 </tr>
+                {/volist}
+                    
                 <tr>
                     <td class="label">是否上架：</td>
                     <td>

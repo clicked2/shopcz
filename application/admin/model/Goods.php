@@ -32,6 +32,10 @@ class Goods extends Model
 	{
 		return $this->belongsTo('brand');
 	}
+	public function memberPrice()
+	{
+		return $this->hasMany('memberPrice')
+	}
 
 	//设置全局范围查询
 	protected function base($query)
