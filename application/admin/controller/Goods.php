@@ -8,6 +8,7 @@ use think\Db;
 use think\facade\Cache;
 
 use app\admin\model\Brand as BrandModel;
+use app\admin\model\MemberLevel as MemberLevelModel;
 
 
 class Goods extends Controller
@@ -18,9 +19,9 @@ class Goods extends Controller
 	public function initialize()
 	{
 		//验证规则
-		$request = request();
-		$validate = self::validate($request->param(), 'app\validate\Goods.'.$this->request->action());
-		if ( $validate !== true ) return self::error('rule: '.implode(', ', $validate));
+		// $request = request();
+		// $validate = self::validate($request->param(), 'app\validate\Goods.'.$this->request->action());
+		// if ( $validate !== true ) return self::error('rule: '.implode(', ', $validate));
 	}
 	/**
 	* 显示资源列表 GET
@@ -30,6 +31,14 @@ class Goods extends Controller
 	public function index()
 	{
 		
+		
+
+		db('member_price')->where('goods_id', 14)->delete();
+		
+		return ;
+		
+		// return json($member);
+		//return json($member['price']);
 		return 'Goods index';
 	}
 
@@ -63,7 +72,6 @@ class Goods extends Controller
 			!$goods->addMemberPrice($request) ? self::error('添加失败: ' . lang('data_insert')) :
 			self::success('添加成功');
 		}
-
 	}
 
 	/**
@@ -97,7 +105,9 @@ class Goods extends Controller
 	*/
 	public function edit($id)
 	{
-		self::assign('id', $id);
+		$goods = GoodsModel::get($id);
+		self::assign('goods', $goods);
+		self::assign('members', $goods->members()->select()->visible(['id', 'level_name', 'pivot.price']));
 		return view('edit');
 	}
 
@@ -112,7 +122,15 @@ class Goods extends Controller
 	{
 		$goods = GoodsModel::get($id);
 		if ( !$goods->logoUpload(true) ) return self::error('修改失败: ' . $goods->info);
-		return !$goods->save() ? self::error('修改失败: ' . lang('data_insert')) : self::success('修改成功', './goods/read');
+		
+		if( !$goods->save() ) {
+			self::error('修改失败: ' . lang('data_insert'));
+		} else {
+			//关联新增 会员价格
+			!$goods->removeMemberPrice($request, $id) ? self::error('添加失败: ' . lang('data_insert')) :
+			self::success('添加成功');
+		}
+
 	}
 	/**
 	* 删除指定资源 DELETE
