@@ -10,6 +10,8 @@ class MemberLevel extends Model
 		// 'jifen_bottom' => 'integer'
 	];
 
+
+	
 	//添加入库数据数据
 	public function addData($request)
 	{

@@ -22,64 +22,74 @@
         </p>
     </div>
     <div id="tabbody-div">
-        <form enctype="multipart/form-data" action="../{$id}" method="post">
+        <form enctype="multipart/form-data" action="../{$goods.id}" method="post">
             <input type="hidden" name="_method" value="PUT">
-            {volist name=':model("goods")->where("id=$id")->select()' id="obj"}
+           
             <table width="90%" id="general-table" align="center">
                  <tr>
                      <td class="label">商品名称：</td>
                     <td>
                         <select name="brand_id">
-                            {volist name=":model('brand')->all()" id='obj1'}
-                                {assign name='str' value=''}
-                                {if $obj.brand_id == $obj1.id}
-                                     {assign name='str' value='selected=selected'}
-                                {/if}
-                                <option {eq name='str' value='selected=selected'}selected=selected{/eq}  value="{$obj1.id}">{$obj1.brand_name}</option>
-                            {/volist}
+                        {volist name=":model('brand')->all()" id='obj1'}
+                            {assign name='str' value=''}
+                             {if $goods.brand_id == $obj1.id}
+                                 {assign name='str' value='selected=selected'}
+                            {/if}
+                            <option value="{$obj1.id}" {eq name='str' value='selected=selected'}selected="selected"{/eq}>{$obj1.brand_name}</option>
+                        {/volist}
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="label">商品名称：</td>
-                    <td><input type="text" name="goods_name" size="60" value="{$obj.goods_name}">
+                    <td><input type="text" name="goods_name" size="60" value="{$goods.goods_name}">
                     <span class="require-field">*</span></td>
                 </tr>
                 <tr>
                     <td class="label">LOGO：</td>
                     <td>
-                        <div class="sm_logo"> <img src="../../static/uploads/{$obj.mid_logo}" ><br></div>
+                        <div class="sm_logo"> <img src="../../static/uploads/{$goods.mid_logo}" ><br></div>
                         <input type="file" name="logo" size="60" class="_logo">
                     </td>
                 </tr>
                 <tr>
                     <td class="label">市场售价：</td>
                     <td>
-                        <input type="text" name="market_price" size="20" value="{$obj.market_price}">
+                        <input type="text" name="market_price" size="20" value="{$goods.market_price}">
                         <span class="require-field">*</span>
                     </td>
                 </tr>
                 <tr>
                     <td class="label">本店售价：</td>
                     <td>
-                        <input type="text" name="shop_price" size="20" value="{$obj.shop_price}">
+                        <input type="text" name="shop_price" size="20" value="{$goods.shop_price}">
                         <span class="require-field">*</span>
                     </td>
                 </tr>
+                <!-- 会员价格 -->
+                {volist name='members' id='obj'}
+                <tr>
+                    <td class="label">{$obj.level_name}：</td>
+                    <td>
+                        <input type="text" name="member_price[{$obj.id}]" size="8" value="{$obj.pivot.price}">
+                        <span>元</span>
+                    </td>  
+                 </tr>
+                {/volist}
                 <tr>
                     <td class="label">是否上架：</td>
                     <td>
                         <input type="radio" name="is_on_sale" value="1" checked="checked" > 是
-                        <input type="radio" name="is_on_sale" value="0"  {if $obj.is_on_sale == '否'}checked="checked"{/if}> 否
+                        <input type="radio" name="is_on_sale" value="0"  {if $goods.is_on_sale == '否'}checked="checked"{/if}> 否
                     </td>
                 </tr>
                 <tr>
                     <td class="label">商品描述：</td>
                     <td>
-                        <textarea id="goods_desc" name="goods_desc">{$obj.goods_desc}</textarea>
+                        <textarea id="goods_desc" name="goods_desc">{$goods.goods_desc}</textarea>
                     </td>
                 </tr>
-                {/volist}
+             
             </table>
             <div class="button-div">
                 <input type="submit" value=" 确定 " class="button"/>
@@ -102,8 +112,8 @@
 <script type="text/javascript" src="../../static/umeditor1_2_2-utf8-php/lang/zh-cn/zh-cn.js"></script>
 <script>
 UM.getEditor('goods_desc', {
-	initialFrameWidth : "100%",
-	initialFrameHeight : 350
+    initialFrameWidth : "100%",
+    initialFrameHeight : 350
 });
 </script>
 <!-- 过滤goods_desc字段没有script标签就将标签转成dom对象 

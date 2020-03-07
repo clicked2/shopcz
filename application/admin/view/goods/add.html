@@ -33,7 +33,6 @@
                     <select name="brand_id">
                         
                         {volist name=":model('brand')->all()" id='obj'}
-                            {eq name="obj.id" value='1'}<option value="1">请选择</option>{/eq}
                             <option value="{$obj.id}">{$obj.brand_name}</option>
                             
                         {/volist}

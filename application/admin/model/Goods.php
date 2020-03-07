@@ -32,10 +32,13 @@ class Goods extends Model
 	{
 		return $this->belongsTo('brand');
 	}
-	public function memberPrice()
+
+	
+	public function members()
 	{
-		return $this->hasMany('member_price');
+		return $this->belongsToMany('member_level', 'member_price', 'level_id');
 	}
+
 
 	//设置全局范围查询
 	protected function base($query)
@@ -60,7 +63,6 @@ class Goods extends Model
 		$status = [0 => '否', 1 => '是'];
 		return $status[$value];
 	}
-	
 
 	//创建一个搜索器 模糊搜索商品名称
 	public function searchGoodsNameAttr($query, $value)
@@ -81,10 +83,19 @@ class Goods extends Model
 	public function addMemberPrice($request)
 	{
 		$param = $request->param('member_price');
+		 var_dump($param );
+		 exit;
+
 		foreach ($param as $key => $value) {
 			$arr[] = ['price' => $value, 'goods_id' => $this->id, 'level_id' => $key];
 		}
 		return $this->memberPrice()->saveAll($arr);
+	}
+	//关联表 修改会员价格
+	public function removeMemberPrice($request, $id)
+	{
+		db('member_price')->where('goods_id', $id)->delete();
+		return self::addMemberPrice($request);
 	}
 
 	//创建一个查询范围 用来做排序 
