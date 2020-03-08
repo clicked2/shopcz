@@ -56,3 +56,12 @@ create table sc_member_price
 	key level_id(level_id),
 	key goods_id(goods_id)
 )engine=InnoDB default charset=utf8 comment '会员价格';
+
+drop table if exists sc_category;
+create table sc_category
+(
+	id mediumint unsigned not null auto_increment comment 'Id',
+	cat_name varchar(30) not null comment '分类名称',
+	parent_id mediumint unsigned not null default '0' comment '上级分类的Id, 0:顶级分类',
+	primary key (id)
+)engine=InnoDB default charset=utf8 comment '分类';

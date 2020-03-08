@@ -19,9 +19,9 @@ class Goods extends Controller
 	public function initialize()
 	{
 		//验证规则
-		// $request = request();
-		// $validate = self::validate($request->param(), 'app\validate\Goods.'.$this->request->action());
-		// if ( $validate !== true ) return self::error('rule: '.implode(', ', $validate));
+		$request = request();
+		$validate = self::validate($request->param(), 'app\validate\Goods.'.$this->request->action());
+		if ( $validate !== true ) return self::error('rule: '.implode(', ', $validate));
 	}
 	/**
 	* 显示资源列表 GET
@@ -30,15 +30,6 @@ class Goods extends Controller
 	*/
 	public function index()
 	{
-		
-		
-
-		db('member_price')->where('goods_id', 14)->delete();
-		
-		return ;
-		
-		// return json($member);
-		//return json($member['price']);
 		return 'Goods index';
 	}
 
@@ -127,10 +118,9 @@ class Goods extends Controller
 			self::error('修改失败: ' . lang('data_insert'));
 		} else {
 			//关联新增 会员价格
-			!$goods->removeMemberPrice($request, $id) ? self::error('添加失败: ' . lang('data_insert')) :
-			self::success('添加成功');
+			!$goods->removeMemberPrice($request, $id) ? self::error('修改失败: ' . lang('data_insert')) :
+			self::success('修改成功');
 		}
-
 	}
 	/**
 	* 删除指定资源 DELETE
@@ -144,11 +134,10 @@ class Goods extends Controller
 		if ( $goods ) {
 			if ( $goods->delete() ) {
 				$goods->imageDelete();
-				return json(['id' => $goods->id,'msg' => 'success']);
+				if ( $goods->removeMemberPrice('', $id, true) )
+					return json(['id' => $goods->id,'msg' => 'success']);
 			}
 		}
 		return json(['error'=> lang('delete_error')]);
-		
 	}
-
 }

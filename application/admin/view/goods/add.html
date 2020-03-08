@@ -5,6 +5,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="../static/admin/css/general.css" rel="stylesheet" type="text/css" />
 <link href="../static/admin/css/main.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .nav{
+            display: hidden;
+            height: 26px;
+            background: #80BDCB;
+        }
+        .nav div {
+            float: left;
+
+        }
+    </style>
 </head>
 <body>
 <h1>
@@ -16,46 +27,66 @@
 </h1>
 
 
-
-
 <div class="tab-div">
-    <div id="tabbar-div">
-        <p>
-            <span class="tab-front" id="general-tab">通用信息</span>
-        </p>
+    <div class="nav">
+        <div id="tabbar-div" style="padding-left: 0;" class="flag">
+            <p>
+                <span class="tab-front" id="general-tab">通用信息</span>
+            </p>
+        </div>
+        <div id="tabbar-div" style="padding-left: 0;" >
+            <p>
+                <span class="tab-front" id="general-tab">商品描述</span>
+            </p>
+        </div>
+        <div id="tabbar-div" style="padding-left: 0;">
+            <p>
+                <span class="tab-front" id="general-tab">会员价格</span>
+            </p>
+        </div>
+        <div id="tabbar-div" style="padding-left: 0;">
+            <p>
+                <span class="tab-front" id="general-tab">商品属性</span>
+            </p>
+        </div>
+        <div id="tabbar-div" style="padding-left: 0;">
+            <p>
+                <span class="tab-front" id="general-tab">商品相册</span>
+            </p>
+        </div>
     </div>
+
     <div id="tabbody-div">
         <form enctype="multipart/form-data" action="../goods" method="post">
             <table width="90%" id="general-table" align="center">
-                <tr>
+                <tr class="goods_info" style="display: none;">
                     <td class="label">所在品牌：</td>
                     <td>
-                    <select name="brand_id">
-                        
-                        {volist name=":model('brand')->all()" id='obj'}
-                            <option value="{$obj.id}">{$obj.brand_name}</option>
-                            
-                        {/volist}
-                    </select>
-                </td>
+                        <select name="brand_id">
+                            {volist name=":model('brand')->all()" id='obj'}
+                                <option value="{$obj.id}">{$obj.brand_name}</option>
+                                
+                            {/volist}
+                        </select>
+                    </td>
                 </tr>
-                <tr>
+                <tr class="goods_info" style="display: none;">
                     <td class="label">商品名称：</td>
                     <td><input type="text" name="goods_name" size="60" />
                     <span class="require-field">*</span></td>
                 </tr>
-                <tr>
+                <tr class="goods_info" style="display: none;">
                     <td class="label">上传图片：</td>
                     <td><input type="file" name="logo" size="60" />
                 </tr>
-                <tr>
+                <tr class="goods_info" style="display: none;">
                     <td class="label">市场售价：</td>
                     <td>
                         <input type="text" name="market_price" value="0" size="20" />
                         <span class="require-field">*</span>
                     </td>
                 </tr>
-                <tr>
+                <tr class="goods_info" style="display: none;">
                     <td class="label">本店售价：</td>
                     <td>
                         <input type="text" name="shop_price" value="0" size="20"/>
@@ -64,7 +95,7 @@
                 </tr>
                 <!-- 会员价格 -->
                 {volist name=':model("member_level")->all()' id='obj'}
-                <tr>
+                <tr class="member_price" style="display: none;">
                     <td class="label">{$obj.level_name}：</td>
                     <td>
                         <input type="text" name="member_price[{$obj.id}]" size="8">
@@ -72,29 +103,27 @@
                     </td>  
                  </tr>
                 {/volist}
-                    
-                <tr>
+                <tr class="goods_info" style="display: none;">
                     <td class="label">是否上架：</td>
                     <td>
                         <input type="radio" name="is_on_sale" value="1" checked="checked" /> 是
                         <input type="radio" name="is_on_sale" value="0" /> 否
                     </td>
                 </tr>
-                <tr>
-                    <td class="label">商品描述：</td>
+                <tr class="goods_desc" style="display: none;">
                     <td>
                         <textarea id="goods_desc" name="goods_desc"></textarea>
                     </td>
                 </tr>
-
             </table>
-            <div class="button-div">
+            <div class="button-div" style="display: none;">
                 <input type="submit" value=" 确定 " class="button"/>
                 <input type="reset" value=" 重置 " class="button" />
             </div>
         </form>
     </div>
 </div>
+
 
 <div id="footer">
 共执行 9 个查询，用时 0.025161 秒，Gzip 已禁用，内存占用 3.258 MB<br />
@@ -113,6 +142,22 @@ UM.getEditor('goods_desc', {
 	initialFrameWidth : "100%",
 	initialFrameHeight : 350
 });
+
+//导航分类
+$('.goods_info').css('display', '')
+$('.nav').children().click(function() {
+    $(this).siblings().removeClass('flag')
+    $(this).addClass('flag')
+    $('#general-table').find('tr').css('display', 'none')
+    switch ($(this).index()) {
+        case 0:
+            return $('.goods_info').css('display', '')
+        case 1:
+            return $('.goods_desc').css('display', '')
+        case 2:
+            return $('.member_price').css('display', '')
+    }
+})
 </script>
 
 
