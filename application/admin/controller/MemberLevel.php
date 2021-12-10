@@ -4,9 +4,8 @@ use think\Controller;
 use app\admin\model\MemberLevel as MemberLevelModel;
 use think\Request;
 
+use think\Db;
 use think\facade\Cache;
-
-
 
 class MemberLevel extends Controller
 {
@@ -16,9 +15,7 @@ class MemberLevel extends Controller
 	public function initialize()
 	{
 		//验证规则
-		$request = request();
-
-		$validate = self::validate($request->param(), 'app\validate\MemberLevel.'.$this->request->action());
+		$validate = self::validate(request()->param(), 'app\admin\validate\MemberLevel.'.$this->request->action());
 		if ( $validate !== true ) return self::error('rule: '.implode(', ', $validate));
 	}
 	/**
@@ -28,7 +25,7 @@ class MemberLevel extends Controller
 	*/
 	public function index()
 	{
-		return 'memberlevel index';
+		return view('index/index');
 	}
 
 	/**
@@ -50,9 +47,10 @@ class MemberLevel extends Controller
 	*/
 	public function save(Request $request)
 	{
-		$memberLevel = new MemberLevelModel();
-		$memberLevel->addData($request);
-		return !$memberLevel->save() ? self::error('添加失败: ' . lang('data_insert')) : self::success('添加成功');
+		$memberlevel = new MemberLevelModel();
+
+		return !$memberlevel->save($request->param()) ? self::error('添加失败: 添加数据失败') :
+		self::success('添加成功', './memberlevel/read');
 	}
 
 	/**
@@ -63,7 +61,7 @@ class MemberLevel extends Controller
 	*/
 	public function read($id)
 	{
-		$list = MemberLevelModel::paginate(4);
+		$list = MemberLevelModel::order('id', 'desc')->paginate(5);
 		self::assign('list', $list);
 		return view('read');
 	}
@@ -76,6 +74,7 @@ class MemberLevel extends Controller
 	*/
 	public function edit($id)
 	{
+		
 		self::assign('id', $id);
 		return view('edit');
 	}
@@ -89,9 +88,10 @@ class MemberLevel extends Controller
 	*/
 	public function update(Request $request, $id)
 	{
-		$level =  MemberLevelModel::get($id);
-		$level->addData($request);
-		return !$level->save() ? self::error('修改失败: ' . lang('data_insert')) : self::success('修改成功', './member/read');
+		$memberlevel = MemberLevelModel::get($id);
+		
+		return !$memberlevel->save($request->param()) ? self::error('修改失败: 修改数据失败') :
+		self::success('修改成功', './memberlevel/read');
 	}
 	/**
 	* 删除指定资源 DELETE
@@ -101,13 +101,9 @@ class MemberLevel extends Controller
 	*/
 	public function delete($id)
 	{
-		$member = MemberLevelModel::get($id);
-		if ( $member ) {
-			if ( $member->delete() ) {
-				return json(['id' => $goods->id,'msg' => 'success']);
-			}
-		}
-		return json(['error'=> lang('delete_error')]);
-	}
+		$memberlevel = MemberLevelModel::get($id);
 
+		return $memberlevel->delete() ? json(['id' => $memberlevel->id, 'msg' => 'success']) :
+		json(['id' => $memberlevel->id, 'msg' => 'error']);
+	}
 }

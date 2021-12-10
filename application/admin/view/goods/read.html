@@ -1,131 +1,116 @@
-{layout name="public/layout"}
-<!-- 搜索表单 -->
-<form action="read" method="get">
-    <div class="form-div">
-        <div class="v_search">
-            <P>
-                商品名称：
-                <input name="gn" value="{$Think.get.gn}">
-            </P>
-            <P>
-                品　　牌：
-                <input name="bn" value="{$Think.get.bn}">
-            </P>
-            <P>
-                价　　格：
-                从<input name="fp" value="{$Think.get.fp}">
-                到<input name="sp" value="{$Think.get.sp}">
-            </P>
-            <P>
-                是否上架：
-                <input type="radio" name="ios" value="" style="margin: 0; padding: 0;" checked="checked"> 全部
-                <input type="radio" name="ios" value="1" style="margin: 0; padding: 0;" {if $Think.get.ios == 1}checked='checked'{/if}> 上架
-                <input type="radio" name="ios" value="0" style="margin: 0; padding: 0;" {if $Think.get.ios === '0'}checked='checked'{/if}> 下架 
-            </P>
-            <P>
-                添加时间：
-                从<input type="text" id="fa" name="fa" size="20" value="{$Think.get.fa}">
-                到<input type="text" id="ta" name="ta" size="20" value="{$Think.get.ta}">
-            </P>
-            <p>
-                排序方式：
-                <input class="odby" type="radio" name="odby" value="id_desc" checked="checked" style="margin: 0; padding: 0;"> 以添加时间降序
-                <input class="odby" type="radio" name="odby" value="id_asc" {if $Think.get.odby == 'id_asc'}checked="checked"{/if} style="margin: 0; padding: 0;"> 以添加时间升序
-                <input class="odby" type="radio" name="odby" value="price_desc" {if $Think.get.odby == 'price_desc'}checked="checked"{/if} style="margin: 0; padding: 0;"> 以价格降序
-                <input class="odby" type="radio" name="odby" value="price_asc" {if $Think.get.odby == 'price_asc'}checked="checked"{/if} style="margin: 0; padding: 0;"> 以价格升序
-              
-            </p>
-            <P>
-                <button name="submit" class="submit">搜索</button>
-            </P>
+{layout name='public/layout'}
+<!-- /头部 -->
+<div class="main-container container-fluid">
+	<div class="page-container">
+		            <!-- Page Sidebar -->
+        <div class="page-sidebar" id="sidebar">
+            <!-- Page Sidebar Header-->
+            <div class="sidebar-header-wrapper">
+                <input class="searchinput" type="text">
+                <i class="searchicon fa fa-search"></i>
+                <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
+            </div>
+            <!-- /Page Sidebar Header -->
+            <!-- Sidebar Menu -->
+            {include file='public/left'}
+            <!-- /Sidebar Menu -->
+        </div>
+        <!-- /Page Sidebar -->
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{:url('../admin')}">系统</a>
+                    </li>
+                    <li class="active">商品列表</li>
+                </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+
+            <!-- Page Body -->
+            <div class="page-body">
+                    
+<button type="button" tooltip="添加商品类型" class="btn btn-sm btn-azure btn-addon" onClick="javascript:window.location.href = 'add'"> <i class="fa fa-plus"></i> Add
+</button>
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-body">
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-hover">
+                        <thead class="">
+                            <tr>
+                                <th class="text-center" width="8%">ID</th>
+                                <th>名称</th>
+                                <th width="8%">编号</th>
+                                <th width="6%" class="text-center">缩略图</th>
+                                <th width="6%">市场价</th>
+                                <th width="6%">本店价</th>
+                                <th width="6%" class="text-center">上架</th>
+                                <th width="4%">栏目</th>
+                                <th width="4%">品牌</th>
+                                <th width="4%">类型</th>
+                                <th  width="4%">重量</th>
+                                <th  width="4%">单位</th>
+                                <th  width="6%">库存量</th>
+                                <th class="text-center" width="18%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {volist name='list' id='obj'}
+                            <tr>
+                                <td align="center">{$obj.id}</td>
+                                <td>{$obj.goods_name|cut_str=###,13}</td>
+                                <td>{$obj.goods_code}</td>
+                                <td align="center">
+                                    {empty name="obj.og_thumb"}暂无图片{else}<img src="__STATIC__uploads/{$obj.og_thumb}" height="30">{/empty}
+                                </td>
+                                <td>{$obj.market_price}</td>
+                                <td>{$obj.shop_price}</td>
+                                <td align="center"><img src="{$obj.on_sale}" height="30"></td>
+                                <td>{$obj.cate_name}</td>
+                                <td>{eq name='obj.brand_name' value=''}空{else}{$obj.brand_name}{/eq}</td>
+                                <td>{eq name='obj.type_name' value=''}空{else}{$obj.type_name}{/eq}</td>
+                                <td>{$obj.goods_weight}</td>
+                                <td>{$obj.weight_unit}</td>
+                                <td>{empty name="obj.gn"}0{/empty}{$obj.gn}</td>
+                                <td align="center">
+                                    <a href="product/{$obj.id}" class="btn btn-success btn-sm shiny">
+                                        <i class="fa fa-list"></i> 库存
+                                    </a>
+                                    <a href="{$obj.id}/edit" class="btn btn-primary btn-sm shiny">
+                                        <i class="fa fa-edit"></i> 编辑
+                                    </a>
+                                    <a href="javascript:void(0)" class="btn btn-danger btn-sm shiny brand_delete"  id="{$obj.id}">
+                                        <i class="fa fa-trash-o"></i> 删除
+                                    </a>
+                                </td>
+                            </tr>
+                            {/volist}
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 10px; text-align: right;">
+                    {$list|raw}
+                </div>
+            </div>
         </div>
     </div>
-</form>
+</div>
 
-<!-- 商品列表 -->
-<div class="list-div" id="listDiv">
-    <table cellpadding="3" cellspacing="1">
-        <tr>
-            <th>编号</th>
-            <th>品牌</th>
-            <th>商品名称</th>
-            <th>logo</th>
-            <th>市场价格</th>
-            <th>本店价格</th>
-            <th>上架</th>
-            <th>添加时间</th>
-            <th>操作</th>
-        </tr>
-        {volist name='list' id='obj'}
-        <tr class="tron">
-            <td align="center">{$obj.id}</td>
-            <td align="center">{if $obj.brand_id != 0}{$obj.brand->brand_name}{else}其他{/if}</td>
-            <td align="center" class="first-cell"><span>{$obj.goods_name}</span></td>
-            <td align="center"><img src="../static/uploads/{$obj.sm_logo}"></td>
-            <td align="center">{$obj.market_price}</td>
-            <td align="center">{$obj.shop_price}</td>
-            <td align="center">{$obj.is_on_sale}</td>
-            <td align="center">{$obj.addtime}</td>
-            <td align="center">
-                <a href="{$obj.id}/edit">修改</a>
-                <a id="{$obj.id}" class="delete">删除</a>
-           </td>
-        </tr>
-        {/volist}
-    </table>
-<!-- 分页开始 -->
-    <table id="page-table" cellspacing="0">
-        <tr>
-            {empty name='list'}
-            <td style="margin: 0; padding:0; width: 100%; height: 50px; margin: auto; text-align: center; font-size: 24px; color: brown;">没有搜索到结果</td>
-            {/empty}
-            <td style="margin: 0; padding:0; width: 100%; height: 50px; margin: auto; text-align: center;" class="page">{$list|raw}</td>
-        </tr>
-    </table>
-<!-- 分页结束 -->
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+	</div>	
 </div>
 
 
-<!-- 引入时间插件 -->
-<link href="../static/datetimepicker/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" charset="utf-8" src="../static/datetimepicker/jquery-ui-1.9.2.custom.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="../static/datetimepicker/datepicker-zh_cn.js"></script>
-<link rel="stylesheet" media="all" type="text/css" href="../static/datetimepicker/time/jquery-ui-timepicker-addon.min.css" />
-<script type="text/javascript" src="../static/datetimepicker/time/jquery-ui-timepicker-addon.min.js"></script>
-<script type="text/javascript" src="../static/datetimepicker/time/i18n/jquery-ui-timepicker-addon-i18n.min.js"></script>
 <script>
-// 添加时间插件
-$.timepicker.setDefaults($.timepicker.regional['zh-CN']);  // 设置使用中文 
-
-$("#fa").datetimepicker();
-$("#ta").datetimepicker();
-</script>
-
-<!-- 引入行高亮显示 -->
-<script type="text/javascript" src="../static/admin/js/tron.js"></script>
-
-
-<script src="../static/admin/js/axios.js"></script>
-<script>
-// 修改分页a标签路径 拼接上一次搜索的条件
-$(function() {
-    if ( window.location.href.indexOf('?') != -1 ) {
-        if ( window.location.href.indexOf('&') != -1 ) {
-            let getParam = window.location.href.substr(window.location.href.indexOf('?'), window.location.href.length).replace(/page.*?&/, "").replace(/\?/, "&")
-            for (var i = 0; i < $('.page a').length; i++) {
-                let a =  $('.page a').eq(i).attr('href')
-                $('.page a').eq(i).attr('href', a + getParam)
-            }
-        }
-    }
-})
-//点击排序让所在表单提交
-$('.odby').click(function() {
-    $('.submit').trigger('click');
-})
-
 //删除
-$('.delete').click(function() {
+$('.brand_delete').click(function() {
     let msg = '确定删除吗?'
     if ( confirm(msg) ) {
         axios.delete($(this).attr('id')).then(success => {
@@ -133,6 +118,4 @@ $('.delete').click(function() {
         }).then(error => console.log(error));
     }
 })
-
 </script>
-

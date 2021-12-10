@@ -1,0 +1,251 @@
+{layout name='public/layout'}
+<!-- /头部 -->
+<div class="main-container container-fluid">
+	<div class="page-container">
+		<!-- Page Sidebar -->
+        <div class="page-sidebar" id="sidebar">
+            <!-- Page Sidebar Header-->
+            <div class="sidebar-header-wrapper">
+                <input class="searchinput" type="text">
+                <i class="searchicon fa fa-search"></i>
+                <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
+            </div>
+            <!-- /Page Sidebar Header -->
+            <!-- Sidebar Menu -->
+            {include file='public/left'}
+            <!-- /Sidebar Menu -->
+        </div>
+        <!-- /Page Sidebar -->
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                   	<li>
+                   		<a href="{:url('../admin')}">系统</a>
+                	</li>
+                    <li>
+                    	<a href="{:url('./category/read')}">商品分类管理</a>
+                	</li>
+                    <li class="active">添加商品分类</li>
+                </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+
+            <!-- Page Body -->
+          	<div class="page-body">
+				<div class="row">
+				    <div class="col-lg-12 col-sm-12 col-xs-12">
+				        <div class="widget">
+				            <div class="widget-header bordered-bottom bordered-blue">
+				                <span class="widget-caption">新增商品分类</span>
+				            </div>
+				            <div class="widget-body">
+				                <div id="horizontal-form">
+				                    <form class="form-horizontal" role="form" action="../{$id}" method="post" enctype="multipart/form-data">
+				                    	<input type="hidden" name="_method" value="PUT">
+				                        {volist name=':model("category")->where("id=$id")->all()' id="db"}
+				                        <div class="form-group">
+				                            <label for="username" class="col-sm-2 control-label no-padding-right">分类名称</label>
+				                            <div class="col-sm-6">
+				                                <select name="pid">
+				                                	<option value="0">顶级分类</option>
+				                                	{volist name='list' id='obj'}
+				                                	<option value="{$obj.id}" {eq name="obj.id" value="$db.pid" }selected="selected"{/eq}>{for start='0' end='$obj.level'}----{/for}{$obj.cate_name}</option>
+				                                	{/volist}
+				                                </select>
+				                            </div>
+				                        </div>
+				                        <div class="form-group">
+				                            <label for="username" class="col-sm-2 control-label no-padding-right">分类名称</label>
+				                            <div class="col-sm-6">
+				                                <input class="form-control" placeholder="" name="cate_name" required="" type="text" value="{$db.cate_name}">
+				                            </div>
+				                            <p class="help-block col-sm-4 red">* 必填</p>
+				                        </div>
+
+				                        {php}
+				                        	$arr = db("category")->field('f.*')->alias('c')->join('category_filter_item fi', 'c.id=fi.category_id')->join('filter f', 'f.id=fi.filter_id')->where("c.id", $db['id'])->select();
+				                        	$arrKey = [];
+				                        	$arrValue = [];
+				                        	foreach($arr as $key=>$value) {
+				                        		if ( $value['type'] == 1 ) {
+				                        			$arrKey[] = $value['id'];
+				                        		} else if ( $value['type'] == 2 ) {
+				                        			$arrValue[] = $value['id'];
+				                        		}
+				                        	}
+				                        	$str = implode(', ', $arrValue);
+				                        	if ( !$arrKey ) {
+                                                $arrKey[] = 0;
+                                            }
+				                        {/php}
+				                   		<script>
+				                   		let filterStr = '{$str}'
+				                   		</script>
+				                   		<div>
+				                   			{volist name='arrKey' id='a'}
+					                        <div class="form-group filter"  style="overflow: hidden;">
+					                            <label for="username" class="col-sm-2 control-label no-padding-right">搜索过滤分类</label>
+					                            <div class="col-sm-6">
+					                            	<div class="extends form-control" style="border: 0; box-shadow: none; float: left; width: 30px;">[{if $key > 0}-{else}+{/if}]</div>
+					                            	<select style="float: left;" class="option"name='ids[]'>
+					                            		<option value="0" >请选择</option>
+					                            		{volist name=':model("filter")->where("type=1")->all()' id='catef'}
+					                            		<option value="{$catef.id}" {eq name='catef.id' value="$a" }selected=selected{/eq}>{$catef.name}</option>
+					                            		{/volist}
+					                            	</select>
+					                            </div>
+					                        </div>
+					                        {/volist}
+				                   		</div>
+
+				                         <div class="form-group">
+				                            <label for="username" class="col-sm-2 control-label no-padding-right">字体图标</label>
+				                            <div class="col-sm-6">
+				                                <input class="form-control" placeholder="" name="iconfont" type="text" value="{$db.iconfont}" style="width: 20%; display: inline-block;">
+				                                {empty name='db.iconfont'}
+				                                暂无图标
+				                                {/empty}
+				                                {notempty name='db.iconfont'}
+				                                <div style="display: inline-block;"><i class="iconfont {$db.iconfont}"></i></div>
+				                                {/notempty}
+				                            </div>
+				                        </div>
+
+				                        <div class="form-group">
+                                            <label for="username" class="col-sm-2 control-label no-padding-right">推荐位</label>
+                                            <div class="col-sm-6">
+                                                <div class="checkbox">
+                                                    {volist name=':model("recpos")->field("r.id,r.rec_name,i.recpos_id")->alias("r")->join("rec_item i", "r.id=i.recpos_id AND i.value_id=$id AND i.value_type=2", "LEFT")->where("r.rec_type=2")->all()' id='check'}
+                                                    <label style="margin-right: 15px;">
+                                                        <input name="rec_check[]" type="checkbox" value="{$check.id}" {notempty name="check.recpos_id" }checked="checked"{/notempty}>
+                                                    	<span class="text">{$check.rec_name}</span>
+                                                    </label>
+                                                    {/volist}
+                                                </div>
+                                            </div>
+                                        </div>
+
+				                        <div class="form-group">
+				                            <label for="username" class="col-sm-2 control-label no-padding-right">缩略图</label>
+				                            <div class="col-sm-6">
+				                                <input style="border: none; width:100%; height:34px; padding:6px 12px; font-size:14px;" placeholder="" name="cate_img" type="file" class="_logo">
+				                                {empty name='db.cate_img'}
+				                                暂无缩略图
+				                                {/empty}
+				                                {notempty name='db.cate_img'}
+				                                <img src="__STATIC__uploads/{$db.cate_img}" height="30" class="img_logo">
+				                                {/notempty}
+				                            </div>
+				                        </div>
+				                      
+				                        <div class="form-group">
+				                            <label for="username" class="col-sm-2 control-label no-padding-right">是否到导航栏</label>
+				                            <div class="col-sm-6" style="display: hidden;">
+				                            	<div class="radio" style="float: left; padding-right: 10px;">
+				                            		<label>
+				                            			<input value="1" name="show_cate" type="radio" checked="checked"><span class="text">是</span>
+				                            		</label>
+				                            	</div>
+				                            	<div class="radio" style="float: left;">
+				                            		<label>
+				                            			<input name="show_cate" value="0" {eq name="db.show_cate" value="否"}checked="checked"{/eq}  class="inverted" type="radio"><span class="text">否</span>
+				                            		</label>
+				                            	</div>
+				                            </div>
+				                        </div>
+
+				                        <div class="form-group">
+				                            <label for="username" class="col-sm-2 control-label no-padding-right">关键词</label>
+				                            <div class="col-sm-6">
+				                            	<textarea class="form-control" name="keywords">{$db.keywords}</textarea>
+				                            </div>
+				                        </div>
+				                        <div class="form-group">
+				                            <label for="username" class="col-sm-2 control-label no-padding-right">分类描述</label>
+				                            <div class="col-sm-6">
+				                            	<textarea class="form-control" name="description">{$db.description}</textarea>
+				                            </div>
+				                        </div>
+				                       
+				                        <div class="form-group">
+				                            <div class="col-sm-offset-2 col-sm-10">
+				                                <button type="submit" class="btn btn-default">保存信息</button>
+				                            </div>
+				                        </div>
+				                        {/volist}
+				                    </form>
+				                </div>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+	</div>	
+</div>
+
+<script>
+$(function() {
+    //上传图片就删除显示图片dom
+    $('._logo').on('input', function() {
+        $('.img_logo').eq($(this).index()).remove();
+    })
+
+    //解决上传后没提交 刷新之后同时出现图片和上传文件的问题
+    for (var i = 0; i < $('._logo').length; i++) {
+          if (  $('._logo').eq(i).val() ) $('.img_logo').eq(i).remove();
+  }
+})
+</script>
+
+
+<script>
+$('.widget-body').delegate('.extends', 'click', function() {
+    if ( $(this).text() == '[+]' ) {
+        let newEl = $(this).parent().parent()[0].cloneNode(true)
+        $(newEl).find('.extends').text('[-]')
+
+        $($(this).parent().parent()).after(newEl)
+    } else if ( $(this).text() == '[-]' ) {
+        $(this).parent().parent().remove()
+    }
+})
+let url = '{:url("@/filter/getfiltervalues/id/", '', false)}'
+$('.widget-body').delegate('.option', 'change', function() {
+    getfiltervs($(this), $(this).parents('.filter').index());
+})
+
+
+for (var i = 0; i < $('.option').length; i++) {
+	if ( $('.option').eq(i).val() != 0 ) {
+		getfiltervs($('.option').eq(i),  $('.option').eq(i).parents('.filter').index())
+	}
+}
+
+function getfiltervs(own, index) {
+	axios.get(url+own.val()).then(resolve => {
+    	own.next().remove()
+    	own.parent().append('<div class="col-sm-6">')
+    	for (let a of resolve.data.arr) {
+    		let str = ''
+    		if ( filterStr.indexOf(a.id) != -1 ) {
+    			str = 'checked=checked'
+    		}
+
+    		own.next().append(`
+		       	<label>
+		            <input name="values[${a.filter_id}][]" type="checkbox" ${str} value="${a.id}">
+		            <span class="text form-control" style="border: 0; box-shadow: none;">${a.name}</span>
+		        </label>
+	    	`)
+	    	own.parent().find('select').attr('name', 'ids['+a.filter_id+']')
+    		
+    	}
+    
+    })
+}
+</script>

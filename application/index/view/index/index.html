@@ -1,0 +1,839 @@
+{layout name='public/layout'}
+
+<body class="home_visual_body">
+    <div class="homeindex" ectype="homeWrap">
+
+<div class="content" style="min-height: 974px;"><div class="visual-item" data-mode="lunbo" data-purebox="banner" data-li="1" data-length="5" ectype="visualItme" style="display: block;" data-diff="0">
+                                    
+<div class="view">
+<div class="banner home-banner">
+	<div class="bd">
+		<!-- 轮播图 -->
+    	<ul data-type="range">
+	 		{volist name=':model("alternate")->order("sort desc")->limit(3)->where("status=1")->all()' id='alternate'}
+	 		{php}
+	 		$imgpath = str_replace('\\', '/', $alternate['img_src']);
+	 		{/php}
+		    <li style="background:url(__STATIC__uploads/{$imgpath}) center center no-repeat;"><div class="banner-width"><a href="" style="height:500px;"></a></div></li>
+	    	{/volist}
+		</ul>
+		<div class="spec" data-spec=""></div>
+	</div>
+    <div class="hd"><ul></ul></div>
+    <div class="vip-outcon">
+        <div class="vip-con">
+            <div class="insertVipEdit" data-mode="insertVipEdit">
+ 
+<div ectype="user_info">
+    <div class="avatar">
+        <a href="user.php?act=profile"><img src="__STATIC__index/img/avatar.png"></a>
+    </div>
+    <div class="login-info">
+        <span>Hi，欢迎来到大商创!</span>
+        <a href="user.php" class="login-button">请登录</a>
+        <a href="merchants.php" target="_blank" class="register_button">我要开店</a>
+    </div>
+</div>
+<!-- banner user Info begin -->
+<div class="vip-item">
+    <div class="tit">
+        <a href="javascript:void(0);" class="tab_head_item">公告</a>
+        <a href="javascript:void(0);" class="tab_head_item">促销</a>
+    </div>
+	<div class="con">
+        <ul>
+        	<!-- cate_id=52=商城公告 -->
+        	{volist name=':model("article")->where("cate_id=52")->order("id desc")->limit(3)->all()' id='notice'}
+            <li><a href="{:url('./index/article/'.$notice['id'])}" target="_blank">{$notice.title}</a></li>
+        	{/volist}
+        </ul>
+        <ul style="display:none;">
+            <!-- cate_id=58=促销信息 -->
+        	{volist name=':model("article")->where("cate_id=58")->order("id desc")->limit(3)->all()' id='info'}
+            <li><a href="{:url('./index/article/'.$info['id'])}" target="_blank">{$info.title}</a></li>
+        	{/volist}
+        </ul>
+    </div>
+</div>
+<!-- banner user Info end -->
+<div class="vip-item">
+    <div class="tit">快捷入口</div>
+    <div class="kj_con">
+                        <div class="item item_1">
+            <a href="history_list.php" target="_blank">
+                <i class="iconfont icon-browse"></i>
+                <span>我的浏览</span>
+            </a>
+        </div>
+                                <div class="item item_2">
+            <a href="user.php?act=collection_list" target="_blank">
+                <i class="iconfont icon-zan-alt"></i>
+                <span>我的收藏</span>
+            </a>
+        </div>
+                                <div class="item item_3">
+            <a href="user.php?act=order_list" target="_blank">
+                <i class="iconfont icon-order"></i>
+                <span>我的订单</span>
+            </a>
+        </div>
+                                <div class="item item_4">
+            <a href="user.php?act=account_safe" target="_blank">
+                <i class="iconfont icon-password-alt"></i>
+                <span>账号安全</span>
+            </a>
+        </div>
+                                <div class="item item_5">
+            <a href="user.php?act=affiliate" target="_blank">
+                <i class="iconfont icon-share-alt"></i>
+                <span>我要分享</span>
+            </a>
+        </div>
+                                <div class="item item_6">
+            <a href="merchants.php" target="_blank">
+                <i class="iconfont icon-settled"></i>
+                <span>商家入驻</span>
+            </a>
+        </div>
+                    </div>
+</div>
+</div><div class="spec" data-spec=""></div>
+            
+        </div>
+    </div>
+</div>
+                                    </div>
+                                </div>
+
+                                <div class="visual-item w1200" ectype="channel"><div class="seckill-channel" id="h-seckill">
+	<div class="box-hd clearfix">
+    	<i class="box_hd_arrow"></i>
+    	<i class="box_hd_dec"></i>
+		<i class="box-hd-icon"></i>
+		<div class="sk-time-cd">
+			<div class="sk-cd-tit">距结束</div>
+			<div class="cd-time fl" ectype="time" data-time="2018-01-22 22:00:00">
+				<div class="days hide">00</div>
+				<span class="split hide">天</span>
+				<div class="hours">05</div>
+				<span class="split">时</span>
+				<div class="minutes">57</div>
+				<span class="split">分</span>
+				<div class="seconds">46</div>
+				<span class="split">秒</span>
+			</div>
+		</div>
+        <div class="sk-more"><a href="seckill.php" target="_blank">更多秒杀</a> <i class="arrow"></i></div>
+	</div>
+	<div class="box-bd clearfix">
+		<div class="tempWrap" style="overflow:hidden; position:relative; width:1210px"><ul style="width: 3872px; position: relative; overflow: hidden; padding: 0px; margin: 0px; left: -1936px;"><li class="opacity_img clone" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=7" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489102299856.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=7" target="_blank" title="新款学院风韩版时尚太空棉宽松长袖印花圆领卫衣女">新款学院风韩版时尚太空棉宽松长袖印花圆领卫衣女</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>145.00</span>
+							<span class="original-price"><em>¥</em>279.59</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=7&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=58" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489106192791.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=58" target="_blank" title="歌梵 床头柜 地中海美式乡村蓝色田园床边柜 储物卧室家具 品质保障 用料环保 质保5年--不单卖">歌梵 床头柜 地中海美式乡村蓝色田园床边柜 储物卧室家具 品质保障 用料环保 质保5年--不单卖</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>2312.00</span>
+							<span class="original-price"><em>¥</em>240.00</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=58&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=8" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489102753231.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=8" target="_blank" title="新款韩版chic学生宽松短款外套上衣字母长袖连帽套头卫衣女潮">新款韩版chic学生宽松短款外套上衣字母长袖连帽套头卫衣女潮</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>145.00</span>
+							<span class="original-price"><em>¥</em>360.00</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=8&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=54" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1490205126945.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=54" target="_blank" title="海得曼无线门铃 家用 不用电池门铃 智能自发电远距离一拖一拖二 按钮 不要电池 防水设计 两年换新">海得曼无线门铃 家用 不用电池门铃 智能自发电远距离一拖一拖二 按钮 不要电池 防水设计 两年换新</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>334.00</span>
+							<span class="original-price"><em>¥</em>99.60</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=54&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=9" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489102950633.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=9" target="_blank" title="韩都衣舍2017韩版女装新款黑白拼接插肩棒球服春季短外套HH5597妠 朴信惠同款 黑白拼接 插肩袖 棒球服">韩都衣舍2017韩版女装新款黑白拼接插肩棒球服春季短外套HH5597妠 朴信惠同款 黑白拼接 插肩袖 棒球服</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>145.00</span>
+							<span class="original-price"><em>¥</em>540.00</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=9&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=55" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1490205156678.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=55" target="_blank" title="闽豹家用工具套装 五金工具箱 电工木工德国维修工具组套修理组合 质量稳定 坚固耐用 彩套包装 可团购定制">闽豹家用工具套装 五金工具箱 电工木工德国维修工具组套修理组合 质量稳定 坚固耐用 彩套包装 可团购定制</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>534.00</span>
+							<span class="original-price"><em>¥</em>99.60</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=55&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=10" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1490174741051.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=10" target="_blank" title="初棉纯色圆领长袖T恤打底衫秋衣女上衣体恤女士修身打底衣春秋 挺拔有型 棉氨材质 柔软舒适 耐洗耐磨">初棉纯色圆领长袖T恤打底衫秋衣女上衣体恤女士修身打底衣春秋 挺拔有型 棉氨材质 柔软舒适 耐洗耐磨</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>145.00</span>
+							<span class="original-price"><em>¥</em>78.00</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=10&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=56" target="_blank"><img src="" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=56" target="_blank" title="JOMOO 厨房水槽套餐双槽304不锈钢洗碗池 洗菜盆加厚水盆一体水槽 官方正品 赠运费险 五年联保 领券更实惠">JOMOO 厨房水槽套餐双槽304不锈钢洗碗池 洗菜盆加厚水盆一体水槽 官方正品 赠运费险 五年联保 领券更实惠</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>834.00</span>
+							<span class="original-price"><em>¥</em>1078.80</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=56&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=6" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489100550574.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=6" target="_blank" title="法国DK正品文胸套装女内衣性感蕾丝聚拢深V调整型小胸品牌收副乳 法国正品 蕾丝性感 原装包装 送女神必备">法国DK正品文胸套装女内衣性感蕾丝聚拢深V调整型小胸品牌收副乳 法国正品 蕾丝性感 原装包装 送女神必备</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>145.00</span>
+							<span class="original-price"><em>¥</em>309.59</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=6&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=57" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1490209796384.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=57" target="_blank" title="航科家用按摩椅全自动全身电动多功能太空舱按摩器老人沙发椅 智能大腿气囊按摩 脚底3D推拿">航科家用按摩椅全自动全身电动多功能太空舱按摩器老人沙发椅 智能大腿气囊按摩 脚底3D推拿</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>2133.00</span>
+							<span class="original-price"><em>¥</em>2616.00</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=57&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+						<li class="opacity_img" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=7" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489102299856.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=7" target="_blank" title="新款学院风韩版时尚太空棉宽松长袖印花圆领卫衣女">新款学院风韩版时尚太空棉宽松长袖印花圆领卫衣女</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>145.00</span>
+							<span class="original-price"><em>¥</em>279.59</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=7&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li>
+					<li class="opacity_img clone" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=58" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489106192791.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=58" target="_blank" title="歌梵 床头柜 地中海美式乡村蓝色田园床边柜 储物卧室家具 品质保障 用料环保 质保5年--不单卖">歌梵 床头柜 地中海美式乡村蓝色田园床边柜 储物卧室家具 品质保障 用料环保 质保5年--不单卖</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>2312.00</span>
+							<span class="original-price"><em>¥</em>240.00</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=58&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li><li class="opacity_img clone" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=8" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489102753231.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=8" target="_blank" title="新款韩版chic学生宽松短款外套上衣字母长袖连帽套头卫衣女潮">新款韩版chic学生宽松短款外套上衣字母长袖连帽套头卫衣女潮</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>145.00</span>
+							<span class="original-price"><em>¥</em>360.00</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=8&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li><li class="opacity_img clone" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=54" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1490205126945.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=54" target="_blank" title="海得曼无线门铃 家用 不用电池门铃 智能自发电远距离一拖一拖二 按钮 不要电池 防水设计 两年换新">海得曼无线门铃 家用 不用电池门铃 智能自发电远距离一拖一拖二 按钮 不要电池 防水设计 两年换新</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>334.00</span>
+							<span class="original-price"><em>¥</em>99.60</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=54&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li><li class="opacity_img clone" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=9" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489102950633.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=9" target="_blank" title="韩都衣舍2017韩版女装新款黑白拼接插肩棒球服春季短外套HH5597妠 朴信惠同款 黑白拼接 插肩袖 棒球服">韩都衣舍2017韩版女装新款黑白拼接插肩棒球服春季短外套HH5597妠 朴信惠同款 黑白拼接 插肩袖 棒球服</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>145.00</span>
+							<span class="original-price"><em>¥</em>540.00</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=9&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li><li class="opacity_img clone" style="float: left; width: 232px;">
+				<div class="p-img"><a href="seckill.php?id=55" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1490205156678.jpg" class="img-lazyload"></a></div>
+				<div class="p-name"><a href="seckill.php?id=55" target="_blank" title="闽豹家用工具套装 五金工具箱 电工木工德国维修工具组套修理组合 质量稳定 坚固耐用 彩套包装 可团购定制">闽豹家用工具套装 五金工具箱 电工木工德国维修工具组套修理组合 质量稳定 坚固耐用 彩套包装 可团购定制</a></div>
+				<div class="p-over">
+					<div class="p-info">
+						<div class="p-price">
+							<span class="shop-price"><em>¥</em>534.00</span>
+							<span class="original-price"><em>¥</em>99.60</span>
+						</div>
+					</div>
+					<div class="p-btn">
+															<a href="seckill.php?id=55&amp;act=view" target="_blank">立即抢购</a>
+															</div>
+				</div>
+			</li></ul></div>
+        <a href="javascript:void(0);" class="prev"><i class="iconfont icon-left"></i></a>
+        <a href="javascript:void(0);" class="next"><i class="iconfont icon-right"></i></a>
+	</div>
+</div>
+<input value="1" name="seckill_goods" type="hidden"></div>
+                                <div class="visual-item w1200" data-mode="h-need" data-purebox="homeAdv" data-li="1" ectype="visualItme" data-diff="0" style="display: block;">
+                                    
+                                    <div class="view">
+<div class="need-channel clearfix" id="h-need_0" data-type="range" data-lift="推荐">
+ 
+<div class="channel-column" style="background:url(__STATIC__index/img/1494984987302153402.jpg) no-repeat;">
+    <div class="column-title">
+            <h3 style="color: #ffffff">优质新品</h3>
+        <p style="color: #ffffff">专注生活美学</p>
+    </div>
+    <div class="column-img"><img src="__STATIC__index/img/1494985002375136884.png"></div>
+    <a href="" target="_blank" class="column-btn">去看看</a>
+</div>
+<div class="channel-column" style="background:url(__STATIC__index/img/1494984989930757668.jpg) no-repeat;">
+    <div class="column-title">
+            <h3 style="color: #ffffff">潮流女装</h3>
+        <p style="color: #ffffff">春装流行款抢购</p>
+    </div>
+    <div class="column-img"><img src="__STATIC__index/img/1494984989766362152.png"></div>
+    <a href="" target="_blank" class="column-btn">去看看</a>
+</div>
+<div class="channel-column" style="background:url(__STATIC__index/img/1494984989391013089.jpg) no-repeat;">
+    <div class="column-title">
+            <h3 style="color: #ffffff">人气美鞋</h3>
+        <p style="color: #ffffff">新外貌“鞋”会</p>
+    </div>
+    <div class="column-img"><img src="__STATIC__index/img/1494984990383161028.png"></div>
+    <a href="" target="_blank" class="column-btn">去看看</a>
+</div>
+<div class="channel-column" style="background:url(__STATIC__index/img/1494984987606903394.jpg) no-repeat;">
+    <div class="column-title">
+            <h3 style="color: #ffffff">品牌精选</h3>
+        <p style="color: #ffffff">潮牌尖货 初春换新</p>
+    </div>
+    <div class="column-img"><img src="__STATIC__index/img/1494984988032635434.png"></div>
+    <a href="" target="_blank" class="column-btn">去看看</a>
+</div>
+<div class="channel-column" style="background:url(__STATIC__index/img/1494984990175755536.jpg) no-repeat;">
+    <div class="column-title">
+            <h3 style="color: #ffffff">护肤彩妆</h3>
+        <p style="color: #ffffff">春妆必买清单 低至3折</p>
+    </div>
+    <div class="column-img"><img src="__STATIC__index/img/1494984991251825734.png"></div>
+    <a href="" target="_blank" class="column-btn">去看看</a>
+</div>
+<div class="spec" data-spec="" data-title=""></div></div>
+                                    </div>
+                                </div><div class="visual-item w1200 brandList" data-mode="h-brand" data-purebox="homeAdv" data-li="1" ectype="visualItme" data-diff="0" style="display: block;">
+                                    
+                                    <div class="view">
+<div class="brand-channel clearfix" id="h-brand_0" data-type="range" data-lift="品牌">
+ 
+<div class="home-brand-adv slide_lr_info">
+        <a href="" target="_blank"><img src="__STATIC__index/img/1494984992104112514.jpg" class="slide_lr_img"></a>
+    </div>
+<div ectype="homeBrand">
+    <div class="brand-list" id="recommend_brands">
+        <ul>
+        	{volist name='brands' id='brand'}
+        	<li>
+                <div class="brand-img"><a href="brandn.php?id=204" target="_blank"><img src="__STATIC__uploads/{$brand.brand_img}"></a></div>
+                <div class="brand-mash">
+                    <div data-bid="204" ectype="coll_brand"></div>
+                </div>
+            </li>
+        	{/volist}
+        	
+        </ul>
+        <a href="javascript:void(0);" ectype="changeBrand" class="refresh-btn"><i class="iconfont icon-rotate-alt"></i><span>换一批</span></a>
+    </div>
+</div>
+<div class="spec" data-spec="" data-title="undefined"></div></div>
+                                    </div>
+                                </div>
+<!-- 首页推荐栏目 //recpos_id=6 首页推荐id-->
+{volist name=':model("rec_item")->field("c.cate_name, c.id")->alias("r")->join("category c", "r.value_id=c.id")->where("r.value_type=2")->where("r.recpos_id=6")->where("c.pid=0")->all()' id='db'}
+
+<div class="visual-item w1200" data-mode="homeFloor" data-purebox="homeFloor" data-li="1" ectype="visualItme" data-diff="0" style="display: block;">
+    <div class="view">
+		<div class="floor-content" data-type="range" id="homeFloor_0" data-lift="女装">
+			<div class="floor-line-con floorOne floor-color-type-1" data-title="男装女装" data-idx="1" id="floor_1" ectype="floorItem">
+			    <div class="floor-hd" ectype="floorTit">
+			    	<i class="box_hd_arrow"></i>
+			    	<i class="box_hd_dec"></i>
+			        <div class="hd-tit">{$db.cate_name}</div>
+			        <div class="hd-tags">
+			            <ul>
+			                <li class="first current">
+			                    <span>新品推荐</span>
+			                    <i class="arrowImg"></i>
+			                </li>
+			               	<!-- 首页推荐栏目二级分类 //recpos_id=6 -->
+			               	{assign name='cate' value=':model("rec_item")->field("r.value_id,c.cate_name")->alias("r")->join("category c", "r.value_id=c.id")->where("c.pid=$db->id")->where("r.value_type=2")->where("r.recpos_id=6")->all()'}
+
+			           		{volist name='cate' id='cates'}
+			                <li data-catgoods="" class="first" ectype="floor_cat_content" data-flooreveval="0" data-visualhome="1" data-floornum="6" data-id="463">
+			                    <span>{$cates.cate_name}</span>
+			                    <i class="arrowImg"></i>
+			                </li>
+			                {/volist}
+			            </ul>
+			        </div>
+			    </div>
+			    <div class="floor-bd bd-mode-01">
+			        <div class="bd-left">
+			        	<!-- 获取左图广告位信息 -->
+			        	{assign name='ads' value=':model("category_ad")->where("category_id=$db->id")->all()'}
+			            <div class="floor-left-slide">
+			                <div class="bd">
+			                    <ul>
+			                    	{volist name='ads' id='ad_left'}
+			                    	{eq name='ad_left.position' value='a'}
+			                        <li><a href=""><img src="__STATIC__uploads/{$ad_left.img_src}"></a></li>
+			                    	{/eq}
+					                {/volist}
+			                    </ul>
+			                </div>
+			                <div class="hd"><ul></ul></div>
+			            </div>
+			                        
+			            <div class="floor-left-adv">
+			            	{volist name='ads' id='ad_left'}
+	                    	{eq name='ad_left.position' value='b'}
+	                        <a href="" target="_blank"><img src="__STATIC__uploads/{$ad_left.img_src}"></a>
+	                    	{/eq}
+	                    	{eq name='ad_left.position' value='c'}
+	                        <a href="" target="_blank"><img src="__STATIC__uploads/{$ad_left.img_src}"></a>
+	                    	{/eq}
+					        {/volist}
+					    </div>
+                    </div>
+			        <div class="bd-right">
+			            <div class="floor-tabs-content clearfix">
+			                <div class="f-r-main f-r-m-adv">
+			                	{php}
+		                			$catetree = new app\extend\catetree\Catetree;
+		                			$arr = $catetree->childrenids(db("category"), $db['id']);
+		                			$arr[] = $db['id'];
+		                		{/php}
+			                	<ul class="p-list">
+			                		{volist name=':model("rec_item")->field("g.goods_name, g.shop_price, g.market_price, g.og_thumb")->alias("r")->join("recpos rp", "r.recpos_id=rp.id AND r.value_type=1")->join("goods g", "r.value_id=g.id")->whereIn("g.category_id", $arr)->limit(6)->order("g.id desc")->group("g.id")->all()' id='goods'}
+			                		<li class="opacity_img">
+			                			<div class="product">
+			                				<div class="p-img"><a href="#" ></a>
+			                					<a href="#" target="_blank" title="{$goods.goods_name}"><img src="__STATIC__uploads/{$goods.og_thumb}" width="140" height="140"></a>
+			                				</div>
+			                				<div class="p-name"><a href="">{$goods.goods_name}</a></div>
+			                				<div class="p_price">
+			                					<span class="shop-price"><em>$</em>{$goods.shop_price}</span>
+				                				<span class="original-price">${$goods.market_price}</span>
+			                				</div>
+			                			</div>
+			                		</li>
+			                		{/volist}
+			                	</ul>
+                			</div>
+			                {volist name='cate' id='cates'}
+			                <div class="f-r-main" ectype="floor_cat_463">
+			                    <ul class="p-list">
+			                    	{php}
+			                			$arr = $catetree->childrenids(db("category"), $cates['value_id']);
+			                			$arr[] = $db['id'];
+			                		{/php}
+			                    	<!-- 商品表查找关于当前及一下栏目的商品 联表查询属于推荐到首页的商品recpos=4商品首页推荐 -->
+			                    	{volist name=':model("rec_item")->field("g.goods_name, g.shop_price, g.market_price, g.og_thumb")->alias("r")->join("recpos rp", "r.recpos_id=rp.id AND r.value_type=1")->join("goods g", "r.value_id=g.id")->whereIn("g.category_id", $arr)->limit(6)->order("g.id desc")->group("g.id")->all()' id='goods'}
+			                    	<li class="opacity_img">
+			                			<div class="product">
+			                				<div class="p-img"><a href="#" ></a>
+			                					<a href="#" target="_blank" title="{$goods.goods_name}"><img src="__STATIC__uploads/{$goods.og_thumb}" width="140" height="140"></a>
+			                				</div>
+			                				<div class="p-name"><a href="">{$goods.goods_name}</a></div>
+			                				<div class="p_price">
+			                					<span class="shop-price"><em>$</em>{$goods.shop_price}</span>
+				                				<span class="original-price">${$goods.market_price}</span>
+			                				</div>
+			                			</div>
+			                		</li>
+			                		{/volist}
+			                    </ul>
+			                </div>
+			                {/volist}
+            			</div>
+        			</div>
+    			</div>
+		        <div class="floor-fd">
+			        <div class="floor-fd-brand clearfix">
+			            {assign name="brands" value=':model("category_brands")->field("brands_id")->where("category_id=$db->id")->all()'}
+			            {if isset($brands[0])}
+				            {volist name=':model("brand")->whereIn("id", $brands[0]->brands_id)->all()' id='brand'}
+				            <div class="item">
+				                <a href="#" target="_blank">
+				                    <div class="link-l"></div>
+				                    <div class="img"><img src="__STATIC__uploads/{$brand.brand_img}" title="{$brand.brand_name}"></div>
+				                    <div class="link"></div>
+				                </a>
+				            </div>
+				          	{/volist}
+			          	{/if}
+			        </div>
+			    </div>
+			</div>
+			<div class="spec" data-spec="" data-title="undefined"></div>
+		</div>
+	</div>
+</div>
+{/volist}
+
+
+<!-- 还没逛够 begin -->
+<div class="visual-item w1200" data-mode="guessYouLike" data-purebox="goods" ectype="visualItme" data-diff="0" style="display: block;">
+	<div class="view">
+		<div class="lift-channel clearfix" id="guessYouLike" data-type="range" data-lift="商品">
+			<div data-goodstitle="title"><div class="ftit"><h3>还没逛够</h3></div></div>
+			<ul>
+				<!-- 获取商品定位设置为首页商品的商品 ri.recpos_id=5 首页商品 -->
+				{volist name=':model("rec_item")->field("g.goods_name,g.shop_price,g.market_price,g.og_thumb")->alias("ri")->join("goods g", "g.id=ri.value_id AND ri.value_type=1")->join("recpos r", "ri.recpos_id=r.id")->where("ri.recpos_id=5")->limit(20)->order("g.id DESC")->all()' id='goods'}
+				<li class="opacity_img">
+				    <a href="goods.php?id=620" target="_blank">
+				        <div class="p-img"><img src="__STATIC__uploads/{$goods.og_thumb}"></div>
+				        <div class="p-name" title="{$goods.goods_name}">{$goods.goods_name}</div>
+				        <div class="p-price">
+				            <div class="shop-price"><em>¥</em>{$goods.shop_price}</div>
+				            <div class="original-price">{$goods.market_price}</div>
+				        </div>
+				    </a>
+				</li>
+				{/volist}
+			</ul>
+			<div class="spec" data-spec=""></div>
+		</div>
+	</div>
+</div>
+<!-- 还没逛够 end -->
+</div>        
+</div>
+    
+ 
+<script type="text/javascript" src="__STATIC__index/js/axios.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/suggest.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/scroll_city.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/utils.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/warehouse.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/warehouse_area.js"></script>
+    	
+	
+     <div ectype="bonusadv_box"></div>
+    <script type="text/javascript" src="__STATIC__index/js/jquery.SuperSlide.2.1.1.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/jquery.yomi.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/cart_common.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/cart_quick_links.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/dsc-common.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/asyLoadfloor.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/jquery.purebox.js"></script>
+    <script type="text/javascript">
+		/*首页轮播*/
+		var slideType = $("*[data-mode='lunbo']").find("*[data-type='range']").data("slide");
+		var length = $(".banner .bd").find("li").length;
+		
+		if(slideType == "roll"){
+			slideType = "left";
+		}
+		
+		if(length>1){
+			$(".banner").slide({titCell:".hd ul",mainCell:".bd ul",effect:slideType,interTime:5000,delayTime:500,autoPlay:true,autoPage:true,trigger:"click",endFun:function(i,c,s){
+				$(window).resize(function(){
+					var width = $(window).width();
+					s.find(".bd li").css("width",width);
+				});
+			}});
+		}else{
+			$(".banner .hd").hide();
+		}
+		
+		//首页信息栏 新闻文章切换 
+		$(".vip-item").slide({titCell:".tit a",mainCell:".con"});
+		
+		//楼层二级分类商品切换
+		$("*[ectype='floorItem']").slide({titCell:".hd-tags li",mainCell:".floor-tabs-content",titOnClassName:"current"});
+		
+		$("*[ectype='floorItem']").slide({titCell:".floor-nav li",mainCell:".floor-tabs-content",titOnClassName:"current"});
+		
+		//第五套楼层模板
+		$(".floor-fd-slide").slide({mainCell:".bd ul",effect:"left",autoPlay:false,autoPage:true,vis:4,scroll:1,prevCell:".ff-prev",nextCell:".ff-next"});
+		
+		//第六套楼层模板
+		$(".floor-brand").slide({mainCell:".fb-bd ul",effect:"left",pnLoop:true,autoPlay:false,autoPage:true,vis:3,scroll:1,prevCell:".fs_prev",nextCell:".fs_next"});
+		
+		//楼层轮播图广告
+		$("*[data-purebox='homeFloor']").each(function(index, element) {
+			var f_slide_length = $(this).find(".floor-left-slide .bd li").length;
+			if(f_slide_length > 1){
+				$(element).find(".floor-left-slide").slide({titCell:".hd ul",mainCell:".bd ul",effect:"left",interTime:3500,delayTime:500,autoPlay:true,autoPage:true});
+			}else{
+				$(element).find(".floor-left-slide .hd").hide();
+			}
+        });
+		//异步加载出首页个人信息、秒杀活动、品牌信息、首页弹出广告
+        $(function(){
+            var site_domain = "";
+            var brand_id = $('*[ectype="homeBrand"]').find(".brand-list").data("value");
+			var where = '';
+			if(!brand_id){
+				brand_id = '';
+			}
+			
+            if(site_domain){
+                $.Ajax({
+                    type: "GET",
+                    url: "//Ajax_dialog.php", /*jquery //Ajax跨域*/
+                    data: "act=getUserInfo&is_jsonp=1&brand_id="+brand_id,
+                    dataType:"jsonp",
+                    jsonp:"jsoncallback",
+                    success: home//Ajax
+                 });
+            }else{
+                //Ajax.call('//Ajax_dialog.php?act=getUserInfo', 'brand_id=' + brand_id, home//Ajax , 'POST', 'JSON');
+            }
+            //Ajax_Homeindex_Bonusadv();
+			function Ajax_Homeindex_Bonusadv(){
+                            var cfg_bonus_adv = "1";//是否开启首页弹出广告
+                            var suffix = "backup_tpl_1";
+                            
+                            if(cfg_bonus_adv == 1 && suffix){
+                                Ajax.call('//Ajax_dialog.php?act=//Ajax_Homeindex_Bonusadv', 'suffix=' + suffix, function(data){
+                                    if(data.error != 1){
+$("[ectype='bonusadv_box']").html(data.content);
+                                    }
+                                } , 'POST', 'JSON');
+                            }
+                        }
+			function homeAjax(data){
+				$("*[ectype='user_info']").html(data.content);
+				$("*[ectype='homeBrand']").html(data.brand_list);
+				
+				if($("*[data-mode='lunbo']").length > 0){
+					$("*[data-mode='lunbo']").after("<div class='visual-item w1200' ectype='channel'>"+data.seckill_goods+"</div>");
+				}else{
+					$(".content").find("*[ectype='visualItme']").eq(0).before("<div class='visual-item w1200' ectype='channel'>"+data.seckill_goods+"</div>");
+				}
+				$("*[ectype='time']").each(function(){
+					$(this).yomi();
+				});
+				
+				//秒杀活动
+				var seckill_goods = $("input[name='seckill_goods']").val();
+				if(seckill_goods == 0){
+					$(".lift-h-seckill").hide();
+				}else{
+					$(".lift-h-seckill").show();
+				}
+				
+				//首页秒杀商品滚动
+				$(".seckill-channel").slide({mainCell:".box-bd ul",effect:"leftLoop",autoPlay:true,autoPage:true,interTime:5000,delayTime:500,vis:5,scroll:1,trigger:"click"});
+				
+				$.catetopLift();
+				
+				$(window).scroll(function(){
+					var scrollTop = $(document).scrollTop();
+					var navTop = $("*[ectype='channel']").offset().top;  //by yanxin
+						
+					if(scrollTop>navTop){
+						$("*[ectype='suspColumn']").addClass("show");
+					}else{
+						$("*[ectype='suspColumn']").removeClass("show");
+					}
+				});
+			}
+                        
+			//重新加载商品模块
+			$("[data-mode='guessYouLike']").each(function(){
+				var _this = $(this);
+				var goods_ids = _this.data("goodsid");
+				var warehouse_id = $("input[name='warehouse_id']").val();
+				var area_id = $("input[name='area_id']").val();
+				if(goods_ids){
+					 Ajax.call('//Ajax_dialog.php?act=getguessYouLike', 'goods_ids=' + goods_ids + "&warehouse_id=" + warehouse_id + "&area_id=" + area_id, function(data){
+						 if(data.content){
+							_this.find(".view .lift-channel ul").html(data.content);
+						}
+					 } , 'POST', 'JSON');
+				}
+			});
+                       
+			$("li[ectype='floor_cat_content'].current").each(function(){
+				 get_homefloor_cat_content(this);
+			});
+			
+			$("[ectype='identi_floorgoods'].current").each(function(){
+				 get_homefloor_cat_content(this);
+			});
+                        checked_article_cat();
+                        function checked_article_cat(){
+                            var cat_ids = '';
+                            $('[data-mode="insertVipEdit"] .tit a').each(function(){
+                                var val = $(this).data('catid');
+                                if(cat_ids){
+                                    cat_ids = cat_ids + "," + val;
+                                }else{
+                                    cat_ids = val;
+                                }
+                            });
+                            if(cat_ids){
+                                Ajax.call('//Ajax_dialog.php?act=checked_article_cat', 'cat_ids=' + cat_ids, function(data){
+						$('[data-mode="insertVipEdit"] .vip_article_cat').html(data.content);
+					 } , 'POST', 'JSON');
+                            }
+                            
+                        }
+        });
+		
+		function readyLoad(){
+			var homeWrap = $("*[ectype='homeWrap']");
+			var homeitem = homeWrap.find("*[ectype='visualItme']");
+			var mode = "";
+			var range = "";
+			var lift = "";
+			var id = "";
+			var floorItem = "";
+			var liftObj = $("*[ectype='lift']");
+			var returnTop = "";
+			
+			if(liftObj.data("type") == "one"){
+				returnTop = '<div class="lift-item lift-item-top" ectype="liftItem"><i class="iconfont icon-returntop"></i></div>';
+			}else{
+				returnTop = '<div class="lift-item lift-item-top" ectype="liftItem">TOP<i class="iconfont icon-top-alt"></i></div>';
+			}
+			
+			homeitem.each(function(k,v){
+				mode = $(this).data("mode");
+				if(mode != "lunbo" && mode != "h-streamer" && mode != "custom"){
+					range = $(this).find("*[data-type='range']");
+					lift = range.data("lift");
+					id = range.attr("id");
+					
+					var _div = '<div class="lift-item" ectype="liftItem" data-target="#'+ id +'" title="'+lift+'"><span>'+lift+'</span><i class="lift-arrow"></i></div>';
+					
+					$("*[ectype='liftList']").append(_div);
+				}
+				
+			});
+			
+			$("*[ectype='liftList']").append(returnTop);
+		}
+		readyLoad();
+		
+		//会员名称*号 by yanxin
+		/*var name = $(".suspend-login a.nick_name").text();
+		var star = new Array();
+		var nameLen = name.length > 2 ? name.length-2:"1";
+		for(var i=1;i<=nameLen;i++){
+			star.push("*");
+		}
+		star = star.join("");
+		if(name.length > 2){
+			var new_name = name[0] + star + name[name.length-1];
+		}else{
+			var new_name = name[0] + star;
+		}
+		$(".suspend-login a.nick_name").text(new_name);
+		*/		
+		//去掉悬浮框 我的购物车
+		$(".attached-search-container .shopCart-con a span").text("");
+		
+		$("*[ectype='time']").each(function(){
+			$(this).yomi();
+		});
+		
+		/*首页可视化 第八套模板 楼层左侧前后轮播 */
+		//aroundSilder(".floor_silder")
+    </script>

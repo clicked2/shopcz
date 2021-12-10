@@ -1,0 +1,545 @@
+{layout name='public/layout'}
+
+<script>
+let login_content = '{:url("./index/flow/getlogincontent")}'
+let getflow2 = '{:url("./index/flow/getflow2")}'
+let getflow2goods = '{:url("./index/flow/getflow2goods")}'
+</script>
+<body class="bg-ligtGary">
+    
+        <div class="container">
+        <div class="w w1200">
+            <div class="cart-warp">
+        <div class="cart-filter">
+                    <div class="cart-stepflex">
+<div class="cart-step-item curr">
+    <span>1.我的购物车</span>
+    <i class="iconfont icon-arrow-right-alt"></i>
+</div>
+<div class="cart-step-item">
+    <span>2.填写订单信息</span>
+    <i class="iconfont icon-arrow-right-alt"></i>
+</div>
+<div class="cart-step-item">
+    <span>3.成功提交订单</span>
+</div>
+                    </div>
+                    
+                </div>
+                <div class="cart-table">
+                    <div class="cart-head">
+<div class="column c-checkbox">
+    <div class="cart-checkbox cart-all-checkbox" ectype="ckList">
+        <input type="checkbox" id="cart-selectall" class="ui-checkbox checkboxshopAll" ectype="ckAll" />
+        <label for="cart-selectall" class="ui-label-14">全选</label>
+    </div>
+</div>
+<div class="column c-goods">商品</div>
+<div class="column c-props">属性</div>
+<div class="column c-price">单价（元）</div>
+<div class="column c-quantity">数量</div>
+<div class="column c-sum">小计</div>
+<div class="column c-action">操作</div>
+</div>
+<div class="cart-tbody" ectype="cartTboy">
+    <!-- 商品 -->
+    <div class="cart-item" ectype="shopItem">
+    
+	    <div class="item-list" ectype="itemList">
+		      <!-- 循环 -->
+		    {php}
+		  	if ( \think\facade\Session::get("uid", "sc") ) {
+		  		$list = model("cart")->field('c.*, g.mid_thumb, g.goods_name')->alias('c')->join('goods g', 'c.goods_id=g.id')->where("user_id", \think\facade\Session::get("uid", "sc"))->select();
+		 	} else {
+			 	$list = unserialize(\think\facade\Cookie::get('data', 'cart_'));
+			 	if ( $list == false ) {
+			 		echo '购物车为空';
+			 	} else {
+			 		foreach($list as $k=>$v) {
+		 				foreach(db('goods')->field('goods_name, mid_thumb')->where('id', $v['goods_id'])->find() as $k1=>$v1) {
+				 			$v[$k1] = $v1;
+				 		}
+				 		$list[$k] = $v;
+				 	}
+			 	}
+			}
+		    {/php}
+		    {volist name='list' id='listData'}
+		   	 <div class="item-single">
+		        <div class="item-item selected" ectype="item" id="product_775" data-goodsid="775">
+                	<div class="item-form">
+                   		<div class="cell s-checkbox">
+							<div class="cart-checkbox" ectype="ckList">
+							    <input type="checkbox" id="checkItem_{$listData.goods_id}" value="{$listData.goods_id}" name="checkItem" class="ui-checkbox" ectype="ckGoods">
+							    <label for="checkItem_{$listData.goods_id}" class="ui-label-14">&nbsp;</label>
+							</div>
+						</div>
+						<div class="cell s-goods">
+							<div class="goods-item">
+							    <div class="p-img">
+					                <a href="javascript:viod(0)" target="_blank"><img src="__STATIC__uploads/{$listData.mid_thumb}" width="70" height="70"></a>
+					            </div>
+							    <div class="item-msg">
+					    	        <a href="javascript:vild(0)" target="_blank">{$listData.goods_name}</a>
+					                <div class="gds-types"></div>
+							    </div>
+							</div>
+                    	</div>
+	                    <div class="cell s-props">
+	                    	{php}$attrArr = [];{/php}
+	                    	{notempty name='listData.attrs'} 
+                            {volist name='listData.attrs' id='attrs'}
+						  		{php}
+							    if ( !is_array($attrs) ) {
+							    	$attr = $attrs->goods_attr_id;
+							    	echo db('attr')->field('attr_name')->where('id', $attrs->attr_id)->find()['attr_name'].' : '.db('goods_attr')->field('attr_value')->where('id', $attrs->goods_attr_id)->find()['attr_value'].'<br />';
+								} else {
+									$attr = $attrs['goods_attr_id'];
+									echo db('attr')->field('attr_name')->where('id', $attrs['attr_id'])->find()['attr_name'].' : '.db('goods_attr')->field('attr_value')->where('id', $attrs['goods_attr_id'])->find()['attr_value'].'<br />';
+								}
+
+								$attrArr[] =  $attr;
+							    {/php}
+						    {/volist}
+                            {else}无属性, 请确认
+                            {/notempty}
+					        {php}
+
+					        $attr = implode(', ', $attrArr);
+
+					        {/php}
+	                    	
+	                    </div>
+	                    <div class="cell s-price">
+							<strong id="goods_price_{$listData.goods_id}" own-data='{$listData.price}'><em>¥</em>{$listData.price}</strong>
+						</div>
+						<div class="cell s-quantity">
+
+							<div class="amount-warp">
+							    <input type="text" value="{$listData.cart_number}" own-data='{$listData.product}' name="goods_number[{$listData.goods_id}]" id="goods_number_{$listData.goods_id}" onchange="change_number(this, this.value, `{$attr}`)" class="text buy-num" ectype="number" defaultnumber="1">
+							    <div class="a-btn">
+							    	<a href="javascript:void(0)" onclick="priplus(this, `{$attr}`)" class="btn-add"><i class="iconfont icon-up"></i></a>
+							        <a href="javascript:void(0)" onclick="priminus(this, `{$attr}`)" class="btn-reduce btn-disabled"><i class="iconfont icon-down"></i></a>
+						        </div>
+						    </div>
+							<div class="tc ftx-03">有货</div>
+						</div>
+						<div class="cell s-sum">
+							<strong id="goods_subtotal_{$listData.goods_id}"><font id="_{$listData.goods_id}_subtotal" owntype='sum_price' own-data='{$listData.price}'><em>¥</em>{php}echo $listData['price'] * $listData['cart_number']{/php}</font></strong>
+							<div class="cuttip hide">
+								<span class="tit">优惠</span>
+							    <span class="price" id="discount_amount_{$listData.goods_id}"><em>¥</em>0.00</span>
+							</div>
+					    </div>
+					    <div class="cell s-action">
+							<a href="javascript:void(0)" id="remove_{$listData.goods_id}" ectype="" data-value="" owntype=delete>删除</a>
+							<a href="javascript:void(0)" id="store_{$listData.goods_id}" ectype="cartOperation" data-value="" class="cart-store">收藏</a>
+						</div>
+                	</div>
+           		</div>
+            </div>
+            {/volist}
+            <!-- 循环结束 -->
+        </div>
+    </div>
+
+
+ <!-- 商品结束 -->
+</div>
+
+
+<div class="cart-tfoot">
+    <div class="cart-toolbar">
+		<div class="w w1200">
+		    <div class="cart-checkbox cart-all-checkbox" ectype="ckList">
+		        <input type="checkbox" id="toggle-checkboxes-down" class="ui-checkbox checkboxshopAll" ectype="ckAll" />
+		        <label for="toggle-checkboxes-down" class="ui-label-14">全选</label>
+		    </div>
+		    <div class="operation">
+		        <a href="#" class="cart-remove-batch" data-dialog="remove_collect_dialog" data-divid="cart-remove-batch" data-removeurl="ajax_dialog.php?act=delete_cart_goods" data-collecturl="ajax_dialog.php?act=drop_to_collect" data-title="删除">删除选中的商品</a>
+		        <a href="#" class="cart-follow-batch" data-dialog="remove_collect_dialog" data-divid="cart-collect-batch" data-removeurl="ajax_dialog.php?act=delete_cart_goods" data-collecturl="ajax_dialog.php?act=drop_to_collect" data-title="关注">移到我的收藏</a>
+		    </div>
+		    <div class="toolbar-right">
+		        <div class="comm-right">
+		            <div class="btn-area">
+		                <form name="formCart" method="post" action="flow.php" onsubmit="return get_toCart();">
+		                    <input name="goPay" type="submit" class="submit-btn" value="去支付"  id="go_pay" data-url="flow.php"/>
+		                    <input name="step" value="checkout" type="hidden" />
+		                    <input name="store_seller" value="" type="hidden" id="cart_store_seller" />
+		                    <input name="cart_value" id="cart_value" value="" type="hidden" />
+							<input name="goods_ru" id="goods_ru" value="" type="hidden" />
+					    </form>
+					</div>
+		            <div class="price-sum" id="total_desc">
+		                <span class="txt">总价(不含运费)：</span>
+		                <span class="price sumPrice" id="cart_goods_amount" ectype="goods_total"></span>
+		            </div>
+		            <div class="reduce-sum">
+					    <span class="txt">已节省：</span>
+					    <span class="price totalRePrice" id="save_total_amount" ectype="save_total">undefined</span>
+					</div>
+		            <div class="amount-sum">已选择<em class="cart_check_num" ectype="cartNum"></em>件商品</div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+</div>
+	                </div>
+</div>
+
+            <div class="p-panel-main c-history">
+                <div class="ftit ftit-delr"><h3>猜你喜欢</h3></div>
+                <div class="gl-list clearfix">
+                    <ul class="clearfix">
+<li class="opacity_img">
+    <div class="p-img"><a href="#" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489109583798.jpg" width="190" height="190"></a></div>
+    <div class="p-price"><em>¥</em>555.00</div>
+    <div class="p-name"><a href="#" target="_blank">【情侣款】Camel骆驼男靴 时尚潮流英伦风马丁靴高帮皮靴 爆卖1万双！ 情侣马丁靴 好评如潮</a></div>
+    <div class="p-num">已售<em>35</em>件</div>
+</li>
+<li class="opacity_img">
+    <div class="p-img"><a href="#" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489109633806.jpg" width="190" height="190"></a></div>
+    <div class="p-price"><em>¥</em>1000.00</div>
+    <div class="p-name"><a href="#" target="_blank">春季马丁靴男真皮男靴黄靴工装军靴韩版短靴沙漠靴高帮男鞋大黄靴 头层牛皮</a></div>
+    <div class="p-num">已售<em>2</em>件</div>
+</li>
+<li class="opacity_img">
+    <div class="p-img"><a href="#" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489108999364.jpg" width="190" height="190"></a></div>
+    <div class="p-price"><em>¥</em>200.00</div>
+    <div class="p-name"><a href="#" target="_blank">特步女鞋2017春季新款运动鞋休闲鞋女慢跑步鞋旅游鞋轻便舒适时尚 早春特惠 爆款休闲女鞋 赠运费险</a></div>
+    <div class="p-num">已售<em>2</em>件</div>
+</li>
+<li class="opacity_img">
+    <div class="p-img"><a href="#" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489102753231.jpg" width="190" height="190"></a></div>
+    <div class="p-price"><em>¥</em>300.00</div>
+    <div class="p-name"><a href="#" target="_blank">新款韩版chic学生宽松短款外套上衣字母长袖连帽套头卫衣女潮</a></div>
+    <div class="p-num">已售<em>2</em>件</div>
+</li>
+<li class="opacity_img">
+    <div class="p-img"><a href="#" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489109337889.jpg" width="190" height="190"></a></div>
+    <div class="p-price"><em>¥</em>330.00</div>
+    <div class="p-name"><a href="#" target="_blank">igtt铝框行李箱拉杆箱旅行箱万向轮男女20/24/26寸密码箱登机箱子 铝合金框 加强密码锁 万向轮 终身保修</a></div>
+    <div class="p-num">已售<em>1</em>件</div>
+</li>
+<li class="opacity_img">
+    <div class="p-img"><a href="#" target="_blank"><img src="__STATIC__index/img/0_thumb_G_1489109282145.jpg" width="190" height="190"></a></div>
+    <div class="p-price"><em>¥</em>250.00</div>
+    <div class="p-name"><a href="#" target="_blank">波米铝框拉杆箱万向轮密码旅行箱子20/24寸行李箱女登机箱男26/28 顺丰速运赠运费险赠十礼品终身质保</a></div>
+    <div class="p-num">已售<em>1</em>件</div>
+</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+        
+    
+        
+    
+    <div class="hide">
+    
+    <div id="dialog_remove" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04">删除商品？</h3>
+                <div class="ftx-03">您可以选择移到收藏，或删除商品。</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="dialog_collect" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04">移到收藏</h3>
+                <div class="ftx-03">移动后选中商品将不在购物车中显示。</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="flow_add_cart" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04">请至少选中一件商品！</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div id="cart_gift_goods" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04 rem">最多领取<em ectype="giftNumber"></em>个商品</h3>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+    <div id="set_default" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04">您确定要设置为默认收货地址吗？</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div id="del_address" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04">你确认要删除该收货地址吗？</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div id="no_address_cart" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04">您还没有选择收货地址！</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div id="no_goods_cart" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04">您的购物车中没有商品！</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div id="cart_address_not" class="hide">
+        <div class="tip-box icon-box">
+            <span class="warn-icon m-icon"></span>
+            <div class="item-fore">
+                <h3 class="ftx-04">您还没有选择收货地址！</h3>
+            </div>
+        </div>
+    </div>
+	
+   
+</div>    
+    
+
+<script type="text/javascript" src="__STATIC__index/js/suggest.js"></script><script type="text/javascript" src="__STATIC__index/js/scroll_city.js"></script><script type="text/javascript" src="__STATIC__index/js/utils.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/warehouse.js"></script><script type="text/javascript" src="__STATIC__index/js/warehouse_area.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/jquery.SuperSlide.2.1.1.js"></script><script type="text/javascript" src="__STATIC__index/js/common.js"></script><script type="text/javascript" src="__STATIC__index/js/shopping_flow.js"></script><script type="text/javascript" src="__STATIC__index/js/jquery.nyroModal.js"></script>    	
+	<script type="text/javascript" src="__STATIC__index/js/dsc-common.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/jquery.purebox.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/region.js"></script>
+    
+	    <script type="text/javascript" src="__STATIC__index/js/checkAll.js"></script>    
+    <script type="text/javascript">
+    	function changenum(rec_id, diff, warehouse_id, area_id, favourable_id){
+            var cValue = $("#cart_value").val();
+            var goods_number = Number($('#goods_number_' + rec_id).val()) + Number(diff);    
+            if(goods_number < 1){
+				pbDialog(json_languages.Purchase_restrictions,"",0)
+            }else{
+                change_goods_number(rec_id,goods_number, warehouse_id, area_id, cValue, favourable_id);
+            }
+        }
+		
+        function change_goods_number(rec_id, goods_number, warehouse_id, area_id, cValue, favourable_id){
+            if(cValue != "" || cValue == 'undefined'){
+               var cValue = $("#cart_value").val(); 
+            }
+            if(goods_number == 0){
+                //pbDialog("数量不能为0","",0);
+                goods_number = 1;
+            }
+
+            var items = $("#checkItem_" +rec_id).parents("*[ectype='promoItem']");
+            var input = items.find("*[ectype='ckGoods']");
+            var str ='';
+            input.each(function(){
+                if($(this).prop('checked')== true){
+                    var val = $(this).val();
+                    str += val + ',';
+                }
+            });
+            str = str.substring(str.length-1,0);
+            
+            //Ajax.call('flow.php?step=ajax_update_cart', 'rec_id=' + rec_id + '&sel_id=' + str + '&sel_flag=' + 'cart_sel_flag' +'&goods_number=' + goods_number +'&cValue=' + cValue +'&warehouse_id=' + warehouse_id +'&area_id=' + area_id +'&favourable_id=' + favourable_id, change_goods_number_response, 'POST','JSON');                
+        }
+		
+        function change_goods_number_response(result)
+        {
+            var rec_id = result.rec_id;           
+            if(result.error == 0){
+                $('#goods_number_' +rec_id).val(result.goods_number);//更新数量
+                $('#goods_subtotal_' +rec_id).html(result.goods_subtotal);//更新小计
+				
+				if(result.dis_amount > 0){
+$('#discount_amount_' +rec_id).parents('.cuttip').removeClass("hide");
+				}else{
+$('#discount_amount_' +rec_id).parents('.cuttip').addClass("hide");
+				}
+				
+				$('#discount_amount_' +rec_id).html(result.discount_amount);//商品优惠价格
+				
+                if(result.goods_number == 1){
+                    $('#goods_number_' +rec_id).parents('.amount-warp').find('.btn-reduce').addClass("btn-disabled");
+                }else{
+                    $('#goods_number_' +rec_id).parents('.amount-warp').find('.btn-reduce').removeClass("btn-disabled");
+                }
+                if(result.goods_number <= 0){
+                    $('#tr_goods_' +rec_id).style.display = 'none'; //数量为零则隐藏所在行
+                    $('#tr_goods_' +rec_id).innerHTML = '';
+                }
+                $('#total_desc').html(result.flow_info);//更新合计
+                if ($('ECS_CARTINFO')){
+                    $('#ECS_CARTINFO').html(result.cart_info); //更新购物车数量
+                }
+        
+                if(result.group.length > 0){
+                    for(var i=0; i<result.group.length; i++){
+$("#" + result.group[i].rec_group).html(result.group[i].rec_group_number);//配件商品数量
+$("#" + result.group[i].rec_group_talId).html(result.group[i].rec_group_subtotal);//配件商品金额
+                    }
+                }
+                
+                $("#goods_price_" + rec_id).html(result.goods_price);
+                $("*[ectype='save_total']").html(result.save_total_amount); //优惠节省总金额
+                $("*[ectype='cartNum']").html(result.subtotal_number); //商品总数
+        
+                // 如果是优惠活动内的商品，更新优惠活动局部 qin
+                if (result.act_id){
+                    $("#product_promo_" + result.ru_id + "_" + result.act_id).html(result.favourable_box_content);
+                }
+            }else if(result.message != ''){
+				//更新数量
+                $('#goods_number_' +rec_id).val(result.cart_Num);
+				pbDialog(result.message," ",0,"",90,10);
+            }                
+        }
+		
+		//购物车悬浮框
+		cartScroll();
+		
+		//超值礼包
+		//$(".package_goods ul").perfectScrollbar("destroy");
+		//$(".package_goods ul").perfectScrollbar();
+    </script>
+
+
+<script>
+let myProxy = new Proxy({}, {get(handler, key) {
+	if ( key == 'attr' ) {
+		setSumNumber(handler[key])
+	} else {
+		return handler[key]
+	}
+}, set(handler, key, value) {
+	if ( key == 'sumNumber' ) {
+		$(handler['msgEle']).parent().next().find('font').html('<em>¥</em>'+value)
+
+		$(handler['msgEle']).parent().next().find('font').attr('own-data', value)
+		//goods number
+		$('.cart_check_num').text($('.item-single').length)	
+		//goods sum price
+		let sum = 0
+		for (var i = 0; i < $('*[owntype=sum_price]').length; i++)
+			sum += parseFloat($('*[owntype=sum_price]').eq(i).attr('own-data'))
+		$('.sumPrice').text(sum)
+	}
+	return handler[key] = value;
+}})
+function setSumNumber(val) {
+	axios.get('{:url("./index/flow/getSumNumber")}', {params: {val, number: myProxy.current}}).then(resolve => {
+		$(myProxy.msgEle).text(resolve.data.msg)
+		myProxy.sumNumber = parseFloat($(myProxy.msgEle).parent().prev().children('strong').attr('own-data')) * parseFloat(myProxy.current)
+	})
+}
+function priplus(e, attr) {
+	//current
+	let current = $(e).parent().parent().children('input').val()
+	//max product
+	let max = $(e).parent().parent().children('input').attr('own-data')
+
+	if ( parseInt($('*[ectype=number]').val()) >= parseInt(max) ) return ;
+	current++
+	$(e).siblings().removeClass('btn-disabled')
+	if ( current >= max ) $(e).addClass('btn-disabled')
+	
+	myProxy.attr = attr
+	myProxy.current = current
+	myProxy.msgEle = $(e).parent().parent().next()
+	myProxy.attr
+	$(e).parent().parent().children('input').val(current)
+}
+function priminus(e, attr) {
+	//current
+	let current = $(e).parent().parent().children('input').val()
+	//max product
+	let max = $(e).parent().parent().children('input').attr('own-data')
+
+	if ( parseInt($(e).parent().parent().children('input').val())  == 1 ) {
+		$(e).addClass('btn-disabled')
+		return ;
+	}
+	
+	current--
+	$(e).siblings().removeClass('btn-disabled')
+	
+	if ( current <= 1 ) $(e).addClass('btn-disabled')
+
+	myProxy.attr = attr
+	myProxy.current = current
+	myProxy.msgEle = $(e).parent().parent().next()
+	myProxy.attr
+	$(e).parent().parent().children('input').val(current)
+}
+function change_number(e, val, attr) {
+	myProxy.current = val
+	myProxy.attr = attr
+	myProxy.msgEle = $(e).parent().next()
+	myProxy.attr
+}
+
+async function calcSumPrice() {
+	await slep()
+	//goods number
+	let number = 0
+	//goods sum price
+	let sum = 0
+	for (var i = 0; i < $('*[owntype=sum_price]').length; i++) {
+		if ( $('*[owntype=sum_price]').eq(i).parents('.item-single').children().first().hasClass('selected') ) {
+			sum += parseFloat($('*[owntype=sum_price]').eq(i).attr('own-data'))
+			number++
+		}
+	}
+	if ( sum == 0 ) $('.item-list').text('购物车为空')
+	$('.sumPrice').text(sum)
+	$('.cart_check_num').text(number)
+}
+calcSumPrice()
+$('body').delegate('.item-single', 'click', function() {
+	calcSumPrice()
+})
+function slep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+$('body').delegate('*[owntype=delete]', 'click', function() {
+	//删除cookie 和 数据库
+	goodsId = $(this).parents('.item-single').find('*[ectype=ckGoods]').val()
+	axios.get('{:url("./index/flow/deletecart")}', {params: {id: goodsId}}).then(resolve => {
+		if ( resolve.data.msg == 'ok' ) {
+            $('.cart_num').text(parseInt($('.cart_num').text()) - 1)
+			$(this).parents('.item-single').remove()
+		}
+	})
+})
+
+
+
+</script>

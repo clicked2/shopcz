@@ -1,0 +1,158 @@
+{layout name='public/layout'}
+
+<body class="bg-ligtGary">
+<div class="login">
+    <div class="loginRegister-header">
+        <div class="w w1200">
+            <div class="logo">
+                <div class="logoImg"><a href="./index.php" class="logo"><img src="" /></a></div>
+                <div class="logo-span">
+                    <b style="background:url(__STATIC__index/img/login_logo_pic.png) no-repeat;"></b>                </div>
+            </div>
+            <div class="header-href">
+                            <span>还没有账号<a href="{:url('./member/account/reg')}" class="jump">免费注册</a></span>
+                        </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="login-wrap">
+            <div class="w w1200">
+                <div class="login-form">
+                    <div class="coagent">
+                                            <div class="tit"><h3>用第三方账号直接登录</h3><span></span></div>
+                        <div class="coagent-warp">
+                                                                                    <a href="user.php?act=oath&type=qq" class="qq"><b class="third-party-icon qq-icon"></b></a>
+                                                                            </div>
+                                        </div>
+                    <div class="login-box">
+                        <div class="tit"><h3>账号登录</h3><span></span></div>
+                        <div class="msg-wrap">
+                            <div class="msg-error" style="display:none">账户名与密码不匹配，请重新输入</div>
+                        </div>
+                        <div class="form">
+                            <form name="formLogin" action="" method="post" onSubmit="userLogin();return false;">
+                                <div class="item">
+                                    <div class="item-info">
+                                        <i class="iconfont icon-name"></i>
+                                        <input type="text" id="username" name="username" class="text" value="" placeholder="用户名/邮箱/手机" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-info">
+                                        <i class="iconfont icon-password"></i>
+                                        <input type="password" style="display:none"/>
+                                        <input type="password" id="nloginpwd" name="password" class="text" value="" placeholder="密码" autocomplete="off" />
+                                    </div>
+                                </div>
+                                                                <div class="item">
+                                    <input id="remember" name="remember" type="checkbox" class="ui-checkbox">
+                                    <label for="remember" class="ui-label">请保存我这次的登录信息。</label>
+                                </div>
+                                <div class="item item-button">
+                                    <input type="hidden" name="dsc_token" value="d181014a3312a8a86c67ccff723ac5fd" autocomplete="off" />
+                                    <input type="hidden" name="act" value="act_login" autocomplete="off" />
+                                    <input type="hidden" name="back_act" value=".%2Findex.php" autocomplete="off" />
+                                    <input type="submit" name="submit" id="loginSubmit" value="登&nbsp;&nbsp;录" class="btn sc-redBg-btn">
+                                </div>
+                                <a href="user.php?act=get_password" class="notpwd gary">忘记密码？</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="login-banner" href="https://www.dscmall.cn/" target="_blank" style="background:url(__STATIC__index/img/1488936109167439630.jpg) center center no-repeat;"></a>
+  
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="footer user-footer">
+	<div class="dsc-copyright">
+		<div class="w w1200">
+			 
+			<p class="footer-ecscinfo pb10">
+				 
+				<a href="index.php" >首页</a> 
+				 
+				| 
+				 
+				 
+				<a href="article.php?id=2" >隐私保护</a> 
+				 
+				| 
+				 
+				 
+				<a href="article.php?id=4" >联系我们</a> 
+				 
+				| 
+				 
+				 
+				<a href="article.php?id=1" >免责条款</a> 
+				 
+				| 
+				 
+				 
+				<a href="article.php?id=5" >公司简介</a> 
+				 
+				| 
+				 
+				 
+				<a href="merchants.php"  target="_blank" >商家入驻</a> 
+				 
+				| 
+				 
+				 
+				<a href="message.php" >意见反馈</a> 
+				 
+				 
+			</p>
+			 
+						<p class="footer-otherlink">	
+																<a href="http://www.ecmoban.com" target="_blank" title="模板堂">模板堂</a>
+				 
+				| 
+				 
+								<a href="http://www.ecjia.com" target="_blank" title="ECJia">ECJia</a>
+				 
+				| 
+				 
+								<a href="http://www.ectouch.cn" target="_blank" title="ECTouch">ECTouch</a>
+				 
+				| 
+				 
+								<a href="http://help.ecmoban.com" target="_blank" title="电商学院">电商学院</a>
+				 
+											</p>
+						 
+			<p class="copyright_info">ICP备案证书号:<a href="http://www.miibeian.gov.cn/" target="_blank">DSC00000123</a> POWERED BY<a href="http://www.dscmall.cn/" target="_blank">大商创</a>2.0</p>
+					</div>
+	</div>
+    
+    
+    <div class="hidden">
+        <input type="hidden" name="seller_kf_IM" value="" rev="" ru_id="" />
+        <input type="hidden" name="seller_kf_qq" value="349488953" />
+        <input type="hidden" name="seller_kf_tel" value="4000-000-000" />
+        <input type="hidden" name="user_id" value="0" />
+    </div>
+</div>
+<script type="text/javascript" src="__STATIC__index/js/jquery-cookie.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/scroll_city.js"></script><script type="text/javascript" src="__STATIC__index/js/user.js"></script><script type="text/javascript" src="__STATIC__index/js/user_register.js"></script><script type="text/javascript" src="__STATIC__index/js/utils.js"></script><script type="text/javascript" src="__STATIC__index/js/jquery.SuperSlide.2.1.1.js"></script><script type="text/javascript" src="__STATIC__index/js/jquery.validation.min.js"></script><script type="text/javascript" src="__STATIC__index/js/dsc-common.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/jquery.purebox.js"></script>
+<script type="text/javascript">
+$(function(){
+	if(document.getElementById("seccode")){
+		$("#seccode").val(0);
+	}
+	
+		
+		
+	//注册问题下拉
+	$.divselect("#divselect","#passwd_quesetion");
+});
+</script>
+
+

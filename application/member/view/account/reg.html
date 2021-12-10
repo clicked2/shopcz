@@ -1,0 +1,189 @@
+{layout name='public/layout'}
+<body class="bg-ligtGary">
+
+<div class="register">
+    <div class="loginRegister-header">
+        <div class="w w1200">
+            <div class="logo">
+                <div class="logoImg"><a href="./index.php" class="logo"><img src="" /></a></div>
+                <div class="logo-span">
+                    <b style="background:url(__STATIC__index/img/login_logo_pic.png) no-repeat;"></b>                </div>
+            </div>
+            <div class="header-href">
+                <span>已注册可<a href="{:url('./member/account/login')}" class="jump">在此登录</a></span>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="w w1200">
+            <div class="register-wrap">
+                <div class="register-adv">
+                <a href="affiche.php?ad_id=456&amp;uri=https%3A%2F%2Fwww.dscmall.cn%2F" target="_blank"><img width="400" height="324" src="__STATIC__index/img/1488939821671881226.jpg" /></a>
+                </div>
+                <div class="register-form">
+                    <div class="form form-other">
+                        <form action="checkReg" method="post" name="formUser">
+                            <div class="item">
+                                <div class="item-label">用　户　名</div>
+                                <div class="item-info">
+                                    <input type="text" name="username" id="username" class="text" value="" autocomplete="off" />
+                                </div>
+                                <div class="input-tip"></div>
+                            </div>
+                            <div class="item">
+                                <div class="item-label">设 置 密 码</div>
+                                <div class="item-info">
+                                    <input type="password" style="display:none"/>
+                                    <input type="password" name="password" id="pwd" class="text" value="" autocomplete="off" />
+                                </div>
+                                <div class="input-tip"></div>
+                            </div>
+                            <div class="item">
+                                <div class="item-label">确 认 密 码</div>
+                                <div class="item-info">
+                                    <input type="password" style="display:none"/>
+                                    <input type="password" name="confirm_password" id="pwdRepeat" class="text" value="" autocomplete="off" />
+                                </div>
+                                <div class="input-tip"></div>
+                            </div>
+                            <div class="item" id="phone_yz">
+                                <div class="item-label">手 机 号 码</div>
+                                <div class="item-info">
+                                    <input type="text" name="mobile_phone" id="mobile_phone" class="text" value="" autocomplete="off">
+                                    <a href="javascript:void(0);" class="meswitch" ectype="meSwitch" data-type="phone">或邮箱验证</a>
+                                </div>
+                                <div class="input-tip"></div>
+                            </div>
+                            <div class="item" id="email_yz" style="display:none;">
+                                <div class="item-label">邮 箱 验 证</div>
+                                <div class="item-info">
+                                    <input type="text" name="email" id="regName" class="text ignore" value="" autocomplete="off" />
+                                    <a href="javascript:void(0);" class="meswitch" ectype="meSwitch" data-type="email">或手机验证</a>
+                                </div>
+                                <div class="input-tip"></div>
+                            </div>
+                            
+                             
+                              <div class="item" id="code_mobile">
+                                <div class="item-label">手机验证码</div>
+                                <div class="item-info">
+                                    <input type="text" name="mobile_code" id="send_code" class="text text-2" value="" autocomplete="off" />
+                                    <a href="javascript:sendChangeEmail(0);" id="zemail" class="sms-btn">获取验证码</a>
+                                </div>
+                                <div class="input-tip"></div>
+                            </div>                                                                                                                                         
+                                                                                    
+
+                            <div class="item" id="code_email" style="display:none;">
+                                <div class="item-label">邮箱验证码</div>
+                                <div class="item-info" >
+                                    <input type="text" name="send_code" id="send_code" class="text text-2 ignore" value="" autocomplete="off"  >
+                                    <a href="javascript:sendChangeEmail(1);" id="zemail" class="sms-btn" >获取验证码</a>
+                                </div>
+                                <div class="input-tip"></div>
+                            </div>
+                            
+                            <div class="item item2">
+                                <div class="item-checkbox">
+                                    <input type="checkbox" id="clause2" class="ui-solid-checkbox" checked="checked" value="1" name="mobileagreement">
+                                    <label class="ui-solid-label" for="clause2">我已阅读并同意<a href="" class="ftx-05" target="_blank">《用户注册协议》</a></label>
+                                </div>
+                                <div class="input-tip"></div>
+                            </div>
+                            <div class="item item2 item-button">
+                                <input type="hidden" name="flag" id="flag" value='register' autocomplete="off" />
+                                <input name="register_type" type="hidden" value="1" autocomplete="off" />
+                                <input type="hidden" name="seccode" id="seccode" value="" autocomplete="off" />
+                                <input name="act" type="hidden" value="act_register" autocomplete="off" >
+                                <input name="register_mode" type="hidden" value="1" autocomplete="off" >
+                                <input id="phone_code_callback" type="hidden" value="0" autocomplete="off" >
+                                <input id="phone_captcha_verification" type="hidden" value="" autocomplete="off" />
+                                <input id="phone_verification" type="hidden" value="0" autocomplete="off" />
+                                <input id="email_verification" type="hidden" value="0" autocomplete="off" />
+                                <input id="enabled_captcha" type="hidden" value="" autocomplete="off" />
+                                <input type="submit" id="registsubmit" name="Submit" maxlength="8" class="btn sc-redBg-btn" value="立即注册"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="footer user-footer">
+	<div class="dsc-copyright">
+		<div class="w w1200">
+			 
+			<p class="footer-ecscinfo pb10">
+				 
+				<a href="index.php" >首页</a> 
+				 
+				| 
+				 
+				
+				<a href="message.php" >意见反馈</a> 
+				 
+				 
+			</p>
+			 
+						<p class="footer-otherlink">	
+																<a href="http://www.ecmoban.com" target="_blank" title="模板堂">模板堂</a>
+		
+				 
+											</p>
+						 
+			<p class="copyright_info">ICP备案证书号:<a href="http://www.miibeian.gov.cn/" target="_blank">DSC00000123</a> POWERED BY<a href="http://www.dscmall.cn/" target="_blank">大商创</a>2.0</p>
+					</div>
+	</div>
+    
+    
+    <div class="hidden">
+        <input type="hidden" name="seller_kf_IM" value="" rev="" ru_id="" />
+        <input type="hidden" name="seller_kf_qq" value="349488953" />
+        <input type="hidden" name="seller_kf_tel" value="4000-000-000" />
+        <input type="hidden" name="user_id" value="0" />
+    </div>
+</div>
+
+<script type="text/javascript" src="__STATIC__index/js/jquery-cookie.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/scroll_city.js"></script><script type="text/javascript" src="__STATIC__index/js/user.js"></script><script type="text/javascript" src="__STATIC__index/js/user_register.js"></script><script type="text/javascript" src="__STATIC__index/js/utils.js"></script><script type="text/javascript" src="__STATIC__index/js/jquery.SuperSlide.2.1.1.js"></script><script type="text/javascript" src="__STATIC__index/js/jquery.validation.min.js"></script><script type="text/javascript" src="__STATIC__index/js/dsc-common.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/jquery.purebox.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/axios.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	if(document.getElementById("seccode")){
+		$("#seccode").val(0);
+	}
+	
+
+		//邮箱验证和手机验证切换
+	$("*[ectype='meSwitch']").on("click",function(){
+		var type = $(this).data("type");
+		
+		if(type == "phone"){
+			$("#email_yz,#code_email").show(); //邮箱验证 邮箱号和邮箱验证码显示
+			$("#phone_yz,#code_mobile").hide(); //邮箱验证 手机号码和短信隐藏
+			
+			$("input[name='register_type']").val(0); //邮箱验证标识
+			$("input[name='mobile_phone']").val(""); //手机号码清空
+			$("input[name='mobile_phone'],input[name='mobile_code']").addClass("ignore"); //邮箱验证 邮箱和邮箱验证码添加验证标识
+			$("input[name='email'],input[name='send_code']").removeClass("ignore"); //邮箱验证 手机号码和短信去除验证标识
+		}else{
+			$("#email_yz,#code_email").hide(); //手机验证 邮箱号和邮箱验证码隐藏
+			$("#phone_yz,#code_mobile").show(); //手机验证 手机号码和短信显示
+			
+			$("input[name='register_type']").val(1); //手机注册标识
+			$("input[name='mobile_phone'],input[name='mobile_code']").removeClass("ignore"); //手机验证 手机号码和短信验证标识
+			$("input[name='email'],input[name='send_code']").addClass("ignore"); //手机验证 邮箱和邮箱验证码去除验证标识
+		}
+	});
+		
+	//注册问题下拉
+	$.divselect("#divselect","#passwd_quesetion");
+});
+</script>
+

@@ -1,20 +1,29 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title>[title]</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="[keywords]">
-<link href="../static/admin/css/general.css" rel="stylesheet" type="text/css" />
-<link href="../static/admin/css/main.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="../static/admin/css/pagination.css">
-<script type="text/javascript" src="../static/umeditor1_2_2-utf8-php/third-party/jquery.min.js"></script>
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+    <title>[title]</title>
+    <meta name="keywords" content="[keywords]">
+    <meta name="description" content="Dashboard">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--Basic Styles-->
+    <link href="__STATIC__admin/style/bootstrap.css" rel="stylesheet">
+    <link href="__STATIC__admin/style/font-awesome.css" rel="stylesheet">
+    <link href="__STATIC__admin/style/weather-icons.css" rel="stylesheet">
+    <link href="__STATIC__admin/style/iconfont.css" rel="stylesheet">
+
+    <!--Beyond styles-->
+    <link id="beyond-link" href="__STATIC__admin/style/beyond.css" rel="stylesheet" type="text/css">
+    <link href="__STATIC__admin/style/demo.css" rel="stylesheet">
+    <link href="__STATIC__admin/style/typicons.css" rel="stylesheet">
+    <link href="__STATIC__admin/style/animate.css" rel="stylesheet">
+
+    <script type="text/javascript" src="__STATIC__admin/style/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="__STATIC__admin/style/axios.js"></script>
 </head>
 <body>
-<h1>
-	{empty name='$_page_btn_name' }
-    <span class="action-span"><a href="_page_btn_link">_page_btn_name</a></span>
-    {/empty}
-    <span class="action-span1"><a href="#">管理中心</a></span>
-    <span id="search_id" class="action-span1"> - _page_title </span>
-    <div style="clear:both"></div> 
-</h1>
+<!-- 头部 -->
+{include file="public/top"}
+<!-- /头部 -->

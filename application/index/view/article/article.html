@@ -1,0 +1,56 @@
+{layout name='public/layout'}
+<body class="bg-ligtGary">
+
+<div class="content article-content">
+    <div class="w w1200 clearfix">
+        {include file='public/article_left'}
+        <div class="article-main">
+            {volist name='list' id='ls'}
+            <div class="am-hd">
+                <h2>{$ls.title}</h2>
+                <div class="extra">
+                    {volist name='dir' id='d'}
+                    <a href="{:url('./index/cate/'.$d['id'])}">{$d.cate_name}</a><i>&gt;</i>
+                    {/volist}
+                    <span>{$ls.title}</span>
+                </div>
+            </div>
+            
+            <div class="am-bd">
+                <ul class="artilce-list">
+                    <li>
+                        <h3><a href="#" title=""></a></h3>
+                        <p>{$ls.content}</p>
+                    </li>
+                </ul>
+            </div>
+            {/volist}
+            <script type="Text/Javascript" language="JavaScript">
+            <!--
+            function selectPage(sel)
+            {
+              sel.form.submit();
+            }
+            //-->
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="__STATIC__index/js/suggest.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/scroll_city.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/utils.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/warehouse.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/warehouse_area.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/dsc-common.js"></script>
+<script type="text/javascript">
+    document.getElementById('cur_url').value = window.location.href;
+</script>
+<script type="text/javascript">
+    $(function(){
+        $(".article-side .side-goods").slide({
+            effect: 'leftLoop'
+        });
+    });
+</script>

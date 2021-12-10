@@ -3,13 +3,10 @@ namespace app\admin\controller;
 use think\Controller;
 use app\admin\model\Goods as GoodsModel;
 use think\Request;
+use app\extend\catetree\Catetree;
 
 use think\Db;
 use think\facade\Cache;
-
-use app\admin\model\Brand as BrandModel;
-use app\admin\model\MemberLevel as MemberLevelModel;
-
 
 class Goods extends Controller
 {
@@ -19,9 +16,8 @@ class Goods extends Controller
 	public function initialize()
 	{
 		//验证规则
-		// $request = request();
-		// $validate = self::validate($request->param(), 'app\validate\Goods.'.$this->request->action());
-		// if ( $validate !== true ) return self::error('rule: '.implode(', ', $validate));
+		$validate = self::validate(request()->param(), 'app\admin\validate\Goods.'.$this->request->action());
+		if ( $validate !== true ) return self::error('rule: '.implode(', ', $validate));
 	}
 	/**
 	* 显示资源列表 GET
@@ -30,16 +26,7 @@ class Goods extends Controller
 	*/
 	public function index()
 	{
-		
-		
-
-		db('member_price')->where('goods_id', 14)->delete();
-		
-		return ;
-		
-		// return json($member);
-		//return json($member['price']);
-		return 'Goods index';
+		return view('index/index');
 	}
 
 	/**
@@ -50,6 +37,10 @@ class Goods extends Controller
 	*/
 	public function add()
 	{
+		$cate = new Catetree();
+        $list = $cate->catetree(db('category')->order('sort', 'desc')->select());
+
+		self::assign('cate_list', $list);
 		return view('add');
 	}
 	
@@ -62,16 +53,11 @@ class Goods extends Controller
 	public function save(Request $request)
 	{
 		$goods = new GoodsModel();
-		//上传logo 添加数据
-		if ( !$goods->logoUpload() ) return self::error('添加失败: ' . $goods->info);
 
-		if( !$goods->save() ) {
-			self::error('添加失败: ' . lang('data_insert'));
-		} else {
-			//关联新增 会员价格
-			!$goods->addMemberPrice($request) ? self::error('添加失败: ' . lang('data_insert')) :
-			self::success('添加成功');
-		}
+		if ( !empty($goods->info) ) return self::error('添加失败: 添加数据失败');
+
+		return !$goods->save($request->param()) ? self::error('添加失败: 添加数据失败') :
+		self::success('添加成功', './goods/read');
 	}
 
 	/**
@@ -82,21 +68,12 @@ class Goods extends Controller
 	*/
 	public function read($id)
 	{
-		$request = request();
-		//链式查询
-		$list = GoodsModel::hasWhere('brand', function($query) {
-					$request = request();
-					$query->where('brand.brand_name', 'like', '%'.$request->param('bn').'%');
-				})->withSearch(['goods_name', 'priceBetween' => 'pb', 'createTime' => 'ct'], [
-					'goods_name' => $request->param('gn'),
-					'pb' => [$request->param('fp') ? $request->param('fp') : '0', $request->param('sp') ? $request->param('sp') : (string)1e9],
-					'ct' => [$request->param('fa') ? $request->param('fa') : '1970-1-1', $request->param('ta') ? $request->param('ta') : date('Y-m-d H:i:s')]
-				])->resultorder($request->param('odby'))
-				->paginate(1);
+		$list = GoodsModel::field('g.*, c.cate_name, b.brand_name, t.type_name, SUM(p.goods_number) gn')->alias('g')->join([['category c', 'g.category_id=c.id'], ['brand b', 'g.brand_id=b.id', 'LEFT'], ['type t', 'g.type_id=t.id', 'LEFT'], ['product p', 'g.id=p.goods_id', 'LEFT']])->group('g.id')->order('id', 'desc')->paginate(5);
+
 		self::assign('list', $list);
 		return view('read');
 	}
-
+	//sum('p.goods_number')->
 	/**
 	* 显示编辑资源单页 GET
 	*
@@ -105,9 +82,11 @@ class Goods extends Controller
 	*/
 	public function edit($id)
 	{
-		$goods = GoodsModel::get($id);
-		self::assign('goods', $goods);
-		self::assign('members', $goods->members()->select()->visible(['id', 'level_name', 'pivot.price']));
+		$cate = new Catetree();
+        $list = $cate->catetree(db('category')->order('sort', 'desc')->select());
+
+		self::assign('cate_list', $list);
+		self::assign('id', $id);
 		return view('edit');
 	}
 
@@ -121,16 +100,9 @@ class Goods extends Controller
 	public function update(Request $request, $id)
 	{
 		$goods = GoodsModel::get($id);
-		if ( !$goods->logoUpload(true) ) return self::error('修改失败: ' . $goods->info);
 		
-		if( !$goods->save() ) {
-			self::error('修改失败: ' . lang('data_insert'));
-		} else {
-			//关联新增 会员价格
-			!$goods->removeMemberPrice($request, $id) ? self::error('添加失败: ' . lang('data_insert')) :
-			self::success('添加成功');
-		}
-
+		return !$goods->save($request->param()) ? self::error('修改失败: 修改数据失败') :
+		self::success('修改成功', './goods/read');
 	}
 	/**
 	* 删除指定资源 DELETE
@@ -141,14 +113,76 @@ class Goods extends Controller
 	public function delete($id)
 	{
 		$goods = GoodsModel::get($id);
-		if ( $goods ) {
-			if ( $goods->delete() ) {
-				$goods->imageDelete();
-				return json(['id' => $goods->id,'msg' => 'success']);
+		
+		return $goods->delete() ? json(['id' => $goods->id, 'msg' => 'success']) :
+		json(['id' => $goods->id, 'msg' => 'error']);
+	}
+	public function product($id)
+	{
+		if ( $id ) {
+			$datas = db('goods_attr')->field('g.id, g.attr_value, a.attr_name')->alias('g')->join('attr a', "g.attr_id=a.id")->where(['g.goods_id' => $id, 'a.attr_type' => '1'])->select();
+			$list = [];
+			foreach ($datas as $key => $value) {
+				$list[$value['attr_name']][] = $value;
+			}
+			self::assign('list', $list);
+			self::assign('id', $id);
+			return view('product');
+		}
+	}
+	public function productSubmit($id)
+	{
+		if ( $id ) {
+			$list = [];
+			if ( is_array(request()->param('goods_num')) ) {
+				foreach (request()->param('goods_num') as $key => $value) {
+					$arr = [];
+					if ( is_array(request()->param('goods_attr')) ) {
+						foreach (request()->param('goods_attr') as $k => $v) {
+							if ( empty($v[$key]) ) {
+								$arr = [];
+								break;
+							}
+							$arr[] = $v[$key];
+						}
+					}
+					
+					if ( !empty($arr) ) {
+						$bool = false;
+						foreach ($list as $k => $v) {
+							if ( in_array(implode(', ', $arr), $v) ) $bool = true;
+						}
+						if ( !$bool )
+							$list[] = ['goods_id' =>  $id, 'goods_number' => $value, 'goods_attr' => implode(', ', $arr)];
+					}
+				}
+			}
+			if ( !empty($list) ) {
+				db('product')->where('goods_id', $id)->delete();
+				if ( db('product')->insertAll($list) ) self::success('添加成功', './goods/read');
 			}
 		}
-		return json(['error'=> lang('delete_error')]);
-		
+	}
+	public function deletePhoto($id)
+	{
+		$photo = db('goods_photo')->where('id', $id)->find();
+		if ( $photo ) {
+			if ( isset($photo['sm_photo']) ) @unlink('static' . DS . 'uploads' . DS . $photo['sm_photo']);
+			if ( isset($photo['mid_photo']) ) @unlink('static' . DS . 'uploads' . DS . $photo['mid_photo']);
+			if ( isset($photo['big_photo']) ) @unlink('static' . DS . 'uploads' . DS . $photo['big_photo']);
+			if ( db('goods_photo')->where('id', $id)->delete() ) {
+				return json(['id' => $id, 'msg' => 'success']);
+			}
+		}
+		return json(['id' => $goods->id, 'msg' => 'error']);
+	}
+	public function getGoodsAttr($id)
+	{
+		return json(db('goods_attr')->where('goods_id', $id)->select());
+	}
+	public function deleteAttr($id='', $name='')
+	{
+		return json(db('goods_attr')->where(['goods_id' => $id, 'attr_value' => $name])->delete());
 	}
 
 }

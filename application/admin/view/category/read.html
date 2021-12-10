@@ -1,0 +1,139 @@
+{layout name='public/layout'}
+<!-- /头部 -->
+<div class="main-container container-fluid">
+	<div class="page-container">
+		            <!-- Page Sidebar -->
+        <div class="page-sidebar" id="sidebar">
+            <!-- Page Sidebar Header-->
+            <div class="sidebar-header-wrapper">
+                <input class="searchinput" type="text">
+                <i class="searchicon fa fa-search"></i>
+                <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
+            </div>
+            <!-- /Page Sidebar Header -->
+            <!-- Sidebar Menu -->
+            {include file='public/left'}
+            <!-- /Sidebar Menu -->
+        </div>
+        <!-- /Page Sidebar -->
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                                    <li>
+                    <a href="{:url('../admin')}">系统</a>
+                </li>
+                                    <li class="active">分类管理</li>
+                                    </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+
+            <!-- Page Body -->
+            <div class="page-body">
+                    
+<button type="button" tooltip="添加分类" class="btn btn-sm btn-azure btn-addon" onClick="javascript:window.location.href = 'add'"> <i class="fa fa-plus"></i> Add
+</button>
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-body">
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-hover">
+                        <thead class="">
+                            <tr>
+                                <th class="text-center" width="8%">ID</th>
+                                <th >分类名称</th>
+                                <th width="10%" class="text-center">缩略图</th>
+                                <th width="10%" class="text-center">图标</th>
+                                <th width="10%" class="text-center">关键字</th>
+                                <th width="10%" class="text-center">描述</th>
+                                <th class="text-center" width="12%">显示到导航栏</th>
+                                <th class="text-center" width="8%">排序</th>
+                                <th class="text-center" width="14%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {volist name="list" id='obj'}
+                            <tr>
+                                <td align="center">{$obj.id}</td>
+                                <td>{for start='0', end='$obj.level'}
+                                    ----
+                                {/for}{$obj.cate_name}</td>
+                                <td class="text-center">
+                                    {empty name='obj.cate_img'}
+                                    暂无图片
+                                    {/empty}
+                                    {notempty name='obj.cate_img'}
+                                    <img src="__STATIC__uploads/{$obj.cate_img}" height="30">
+                                    {/notempty}
+                                </td>
+                                <td class="text-center"> {empty name='obj.iconfont'}
+                                    暂无图标{else}<i class="iconfont {$obj.iconfont}"></i>
+                                    {/empty}</td>
+                                <td class="text-center">{$obj.keywords}</td>
+                                <td class="text-center">{$obj.description}</td>
+                                
+                                <td align="center">
+                                    {eq name="obj.show_cate" value="1"}
+                                    <img src="../static/admin/images/right.png">
+                                    {/eq}
+                                    {eq name="obj.show_cate" value="0"}
+                                    <img src="../static/admin/images/error.png">
+                                    {/eq}
+                                </td>
+
+                                <td align="center"><input type="" id="{$obj.id}" value="{$obj.sort}" class="php_sort" style="width: 50px; text-align: center;"></td>
+                                <td align="center">
+                                    <a href="{$obj.id}/edit" class="btn btn-primary btn-sm shiny">
+                                        <i class="fa fa-edit"></i> 编辑
+                                    </a>
+                                    
+                                    <a href="javascript:void(0)" class="btn btn-danger btn-sm shiny cate_delete" id="{$obj.id}">
+                                        <i class="fa fa-trash-o"></i> 删除
+                                    </a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            <tr>
+                                <td align="right" colspan="8" style="padding-right: 20px;">
+                                    <button class="btn btn-primary btn-sm shiny set_sort">排序</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 10px; text-align: right;">
+                    {//$list|raw}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+	</div>	
+</div>
+
+<script>
+
+$('.set_sort').click(function(){
+    let arr = []
+    for (var i = 0; i < $('.php_sort').length; i++) {
+        arr[$('.php_sort').eq(i).attr('id')] = $('.php_sort').eq(i).val()
+    }
+    axios.get('', {params: {sort: arr}}).then(resolve => window.location.href = window.location.href)
+})
+//删除
+$('.cate_delete').click(function() {
+    let msg = '确定删除吗?'
+    if ( confirm(msg) ) {
+        axios.delete($(this).attr('id')).then(success => {
+            if (success.data.msg == 'success') window.location.href = window.location.href
+        }).then(error => console.log(error));
+    }
+})
+</script>

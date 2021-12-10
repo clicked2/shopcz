@@ -1,0 +1,29 @@
+<div class="article-side">
+    <dl class="article-menu">
+        <dt class="am-t"><a href="#">文章分类列表</a></dt>
+        <dd class="am-c">
+            <div class="menu-item active">
+                <div class="item-hd"><a href="javascript:void(0)">系统分类</a><i class="iconfont icon-down"></i></div>
+                <ul class="item-bd">
+                    {volist name='helpCate' id='hc'}
+                    <li><a href="{:url('./index/cate/'.$hc->id)}">{$hc.cate_name}</a></li>
+                    {/volist}
+                </ul>
+            </div>
+        </dd>
+        {volist name='comCates' id='cc'}
+        <dd class="am-c">
+            <div class="menu-item active">
+                <div class="item-hd"><a href="javascript:void(0)">{$cc.cate_name}</a><i class="iconfont icon-down"></i></div>
+                <ul class="item-bd">
+                {notempty name='cc.children'}
+                    {volist name='cc.children' id="to"}
+                        <li><a href="{:url('./index/cate/'.$to->id)}">{$to.cate_name}</a></li>
+                    {/volist}
+                {/notempty}
+                </ul>
+            </div>
+        </dd>
+        {/volist}
+    </dl>
+</div>

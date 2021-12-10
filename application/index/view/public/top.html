@@ -1,0 +1,53 @@
+{eq name=':url()' value='/shop/public/index/index/index.html'}
+<div class="top-banner" style="background: rgb(255, 40, 125) none repeat scroll 0% 0%;">
+    <div class="module w1200" data-type="range">
+        <a href="#" target="_blank"><img src="__STATIC__index/img/1494985021864887905.jpg" width="1200" height="80"></a>
+        <i class="iconfont icon-cha" ectype="close"></i>
+    </div>
+    <div class="spec" data-spec="{&quot;picHeight&quot;:&quot;500&quot;,&quot;target&quot;:&quot;_blank&quot;,&quot;navColor&quot;:&quot;#ff287d&quot;,&quot;is_li&quot;:0,&quot;bg_color&quot;:[],&quot;pic_src&quot;:[&quot;__STATIC__index/img/1494985021864887905.jpg&quot;],&quot;link&quot;:&quot;&quot;,&quot;sort&quot;:[&quot;1&quot;]}"></div>
+</div>
+{/eq}
+<div class="site-nav" id="site-nav">
+    <div class="w w1200">
+        <div class="fl">	
+            <div class="city-choice" id="city-choice" data-ectype="dorpdown">
+				<div class="dorpdown-layer">
+					<div class="ui-areamini-content-wrap" id="ui-content-wrap">
+						<div class="scrollBody" id="scrollBody"></div>
+					</div>
+				</div>
+			</div>            
+			<div class="txt-info" id="ECS_MEMBERZONE">
+				<script>
+					axios.get(`{:url('member/account/checklogin')}`).then(resolve => {
+						if ( resolve.data.uid ) {
+							$('#ECS_MEMBERZONE').html(`
+								<span>您好 &nbsp;<a href="{:url('./member/account/user')}">${resolve.data.username}</a></span>
+				<span>，欢迎来到&nbsp;<a alt="首页" title="首页" href="{:url('@index')}">b2cshop</a></span>
+				<span>[<a href="{:url('./member/account/loginout')}">退出</a>]</span>
+								`)
+
+						} else {
+							$('#ECS_MEMBERZONE').html(`
+								<span><a href="{:url('./member/account/login')}" style="color: red;">请登录</a></span>
+								<span> &nbsp;&nbsp;<a href="{:url('./member/account/reg')}">免费注册</a></span>
+								`)
+						}
+					})
+
+				</script>
+				
+
+				
+	        </div>
+    	</div>
+		<ul class="quick-menu fr">
+			{volist name='nav.top' id='nt'}
+			{if $key > 0}<li class="spacer"></li>{/if}
+			<li>
+				<div class="dt"><a href="./{$nt.nav_url}">{$nt.nav_name}</a></div>
+			</li>
+			{/volist}
+		</ul>
+	</div>
+</div>

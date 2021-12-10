@@ -1,4 +1,4 @@
 <?
 return [
-	app\http\middleware\Filter::class
+	app\http\middleware\CheckTime::class
 ];

@@ -1,0 +1,62 @@
+{layout name='public/layout'}
+<body class="bg-ligtGary">
+
+<div class="content article-content">
+    <div class="w w1200 clearfix">
+        {include file='public/article_left'}
+       
+        <div class="article-main">
+            <div class="am-hd">
+                <h2>{$cateTitle.cate_name}</h2>
+                <div class="extra">
+                    {volist name='dir' id='d'}
+                    {if $key < count($dir)-1}
+                    <a href="{:url('./index/cate/'.$d['id'])}">{$d.cate_name}</a><i>&gt;</i>
+                    {else}
+                    <span>{$d.cate_name}</span>
+                    {/if}
+                    {/volist}
+                </div>
+            </div>
+            {volist name='list' id='ls'}
+            <div class="am-bd">
+                <ul class="artilce-list">
+                    <li>
+                        <h3><a href="{empty name='ls.link_url'}{:url('./index/article/'.$ls->id)}{else}{$ls.link_url}{/empty}" title="{$ls.title}">{$ls.title}</a></h3>
+                        <p></p>
+                    </li>
+                </ul>
+            </div>
+            {/volist}
+
+            <script type="Text/Javascript" language="JavaScript">
+            <!--
+            function selectPage(sel)
+            {
+              sel.form.submit();
+            }
+            //-->
+            </script>
+        </div>
+        
+
+    </div>
+</div>
+
+<script type="text/javascript" src="__STATIC__index/js/suggest.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/scroll_city.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/utils.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/warehouse.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/warehouse_area.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/dsc-common.js"></script>
+<script type="text/javascript">
+	document.getElementById('cur_url').value = window.location.href;
+</script>
+<script type="text/javascript">
+	$(function(){
+		$(".article-side .side-goods").slide({
+			effect: 'leftLoop'
+		});
+	});
+</script>

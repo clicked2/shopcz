@@ -1,0 +1,135 @@
+{layout name='public/layout'}
+<!-- /头部 -->
+<div class="main-container container-fluid">
+	<div class="page-container">
+		            <!-- Page Sidebar -->
+        <div class="page-sidebar" id="sidebar">
+            <!-- Page Sidebar Header-->
+            <div class="sidebar-header-wrapper">
+                <input class="searchinput" type="text">
+                <i class="searchicon fa fa-search"></i>
+                <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
+            </div>
+            <!-- /Page Sidebar Header -->
+            <!-- Sidebar Menu -->
+            {include file='public/left'}
+            <!-- /Sidebar Menu -->
+        </div>
+        <!-- /Page Sidebar -->
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{:url('../admin')}">系统</a>
+                    </li>
+                    <li class="active">商品库存管理</li>
+                </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+
+            <!-- Page Body -->
+            <div class="page-body">
+                    
+
+</button>
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-body">
+                <form action="../productSubmit/{$id}" method="get">
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-hover">
+                            <thead class="">
+                                <tr>
+                                    {volist name='list' id='obj'}
+                                    <th class="text-center" >{$key}</th>
+                                    {/volist}
+                                    <th class="text-center" >库存量</th>
+                                    <th class="text-center" width="8%">操作</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                {volist name=':model("product")->where("goods_id=$id")->all()' id='db'}
+                                <tr>
+                                    {php}
+                                    foreach ($list as $k => $v) {
+                                        echo '<td align="center">';
+                                        echo '    <select name="goods_attr['.$k.'][]">';
+                                        echo '        <option value="">请选择</option>';
+                                        foreach ($v as $k1 => $v1) {
+                                        $str = '';
+                                        $arr = explode(',', $db['goods_attr']);
+                                        if ( in_array($v1['id'], $arr) ) $str = 'selected="selected"';
+                                        echo '        <option '.$str.' value="'.$v1['id'].'" >'.$v1['attr_value'].'</option>';
+                                        }
+                                        echo '    </select>';
+                                        echo '</td>';
+                                    }
+                                    {/php}
+                                    <td align="center">
+                                        <input type="" name="goods_num[]" style="text-align: center;" value="{$db.goods_number}">
+                                    </td>
+                                    
+                                    <td align="center">
+                                        <button type="button" class="btn btn-sm btn-azure btn-addon" id="product">{if $key < 1}+{else}-{/if}</button>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                {empty name='db'}
+                                <tr>
+                                    {php}
+                                    foreach ($list as $k => $v) {
+                                        echo '<td align="center">';
+                                        echo '    <select name="goods_attr['.$k.'][]">';
+                                        echo '        <option value="">请选择</option>';
+                                        foreach ($v as $k1 => $v1) { 
+                                        echo '        <option value="'.$v1['id'].'">'.$v1['attr_value'].'</option>';
+                                        }
+                                        echo '    </select>';
+                                        echo '</td>';
+                                    }
+                                    {/php}
+                                    <td align="center">
+                                        <input type="" name="goods_num[]" style="text-align: center;">
+                                    </td>
+                                    
+                                    <td align="center">
+                                        <button type="button" class="btn btn-sm btn-azure btn-addon" id="product">+</button>
+                                    </td>
+                                </tr>
+                                {/empty}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 10px; text-align: right;">
+                        <button type="submit" class="btn btn-sm btn-azure btn-addon" id="product">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+	</div>	
+</div>
+
+<script>
+$('body').delegate('#product', 'click', function() {
+    if ( $(this).text() == '+' ) {
+        let newEl = $(this).parent().parent()[0].cloneNode(true)
+        console.log(newEl)
+        $(newEl).find('#product').text('-')
+        $($(this).parent().parent()).after(newEl)
+    } else if ( $(this).text() == '-' ) {
+        $(this).parent().parent().remove()
+    }
+})
+
+</script>

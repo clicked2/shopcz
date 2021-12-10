@@ -1,140 +1,364 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title>ECSHOP 管理中心 - 添加新商品 </title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="../static/admin/css/general.css" rel="stylesheet" type="text/css" />
-<link href="../static/admin/css/main.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
-<h1>
-    <span class="action-span"><a href="read">商品列表</a>
-    </span>
-    <span class="action-span1"><a href="">ECSHOP 管理中心</a></span>
-    <span id="search_id" class="action-span1"> - 添加新商品 </span>
-    <div style="clear:both"></div>
-</h1>
-
-
-
-
-<div class="tab-div">
-    <div id="tabbar-div">
-        <p>
-            <span class="tab-front" id="general-tab">通用信息</span>
-        </p>
-    </div>
-    <div id="tabbody-div">
-        <form enctype="multipart/form-data" action="../goods" method="post">
-            <table width="90%" id="general-table" align="center">
-                <tr>
-                    <td class="label">所在品牌：</td>
-                    <td>
-                    <select name="brand_id">
-                        
-                        {volist name=":model('brand')->all()" id='obj'}
-                            <option value="{$obj.id}">{$obj.brand_name}</option>
-                            
-                        {/volist}
-                    </select>
-                </td>
-                </tr>
-                <tr>
-                    <td class="label">商品名称：</td>
-                    <td><input type="text" name="goods_name" size="60" />
-                    <span class="require-field">*</span></td>
-                </tr>
-                <tr>
-                    <td class="label">上传图片：</td>
-                    <td><input type="file" name="logo" size="60" />
-                </tr>
-                <tr>
-                    <td class="label">市场售价：</td>
-                    <td>
-                        <input type="text" name="market_price" value="0" size="20" />
-                        <span class="require-field">*</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label">本店售价：</td>
-                    <td>
-                        <input type="text" name="shop_price" value="0" size="20"/>
-                        <span class="require-field">*</span>
-                    </td>
-                </tr>
-                <!-- 会员价格 -->
-                {volist name=':model("member_level")->all()' id='obj'}
-                <tr>
-                    <td class="label">{$obj.level_name}：</td>
-                    <td>
-                        <input type="text" name="member_price[{$obj.id}]" size="8">
-                        <span>元</span>
-                    </td>  
-                 </tr>
-                {/volist}
-                    
-                <tr>
-                    <td class="label">是否上架：</td>
-                    <td>
-                        <input type="radio" name="is_on_sale" value="1" checked="checked" /> 是
-                        <input type="radio" name="is_on_sale" value="0" /> 否
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label">商品描述：</td>
-                    <td>
-                        <textarea id="goods_desc" name="goods_desc"></textarea>
-                    </td>
-                </tr>
-
-            </table>
-            <div class="button-div">
-                <input type="submit" value=" 确定 " class="button"/>
-                <input type="reset" value=" 重置 " class="button" />
+{layout name='public/layout'}
+<!-- /头部 -->
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <!-- Page Sidebar -->
+        <div class="page-sidebar" id="sidebar">
+            <!-- Page Sidebar Header-->
+            <div class="sidebar-header-wrapper">
+                <input class="searchinput" type="text">
+                <i class="searchicon fa fa-search"></i>
+                <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
             </div>
-        </form>
-    </div>
+            <!-- /Page Sidebar Header -->
+            <!-- Sidebar Menu -->
+            {include file='public/left'}
+            <!-- /Sidebar Menu -->
+        </div>
+        <!-- /Page Sidebar -->
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{:url('../admin')}">系统</a>
+                    </li>
+                    <li>
+                        <a href="{:url('./goods/read')}">商品列表</a>
+                    </li>
+                    <li class="active">添加商品</li>
+                </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+
+            <!-- Page Body -->
+            <div class="page-body">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="widget-main " >
+                                    <form class="form-horizontal" role="form" action="../goods" method="post" enctype="multipart/form-data">
+                                        <div class="tabbable">
+                                            <ul class="nav nav-tabs tabs-flat" id="myTab11">
+                                                <li class="active">
+                                                    <a data-toggle="tab" href="#baseinfo">
+                                                        基本信息
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a data-toggle="tab" href="#goodsdes">
+                                                        描述信息
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a data-toggle="tab" href="#mbprice">
+                                                        会员价格
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a data-toggle="tab" href="#goodsattr">
+                                                        商品属性
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a data-toggle="tab" href="#filter">
+                                                        搜索属性
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a data-toggle="tab" href="#goodsphoto">
+                                                        商品相册
+                                                    </a>
+                                                </li> 
+                                            </ul>
+                                            <div class="tab-content tabs-flat">
+                                                <div id="baseinfo" class="tab-pane in active">
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">商品名称</label>
+                                                        <div class="col-sm-6">
+                                                            <input class="form-control" placeholder="" name="goods_name" required="" type="text">
+                                                        </div>
+                                                        <p class="help-block col-sm-4 red">* 必填</p>
+                                                    </div>
+                                                   
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">推荐位</label>
+                                                        <div class="col-sm-6">
+                                                            <div class="checkbox">
+                                                                {volist name=':model("recpos")->where("rec_type=1")->all()' id='check'}
+                                                                <label style="margin-right: 15px;">
+                                                                    <input name="rec_check[]" type="checkbox" value="{$check.id}">
+                                                                    <span class="text">{$check.rec_name}</span>
+                                                                </label>
+                                                                {/volist}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">商品主图</label>
+                                                        <div class="col-sm-6">
+                                                           <input type="file" name="og_thumb" class="form-control" style="border: none; box-shadow: none;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">上架</label>
+                                                        <div class="col-sm-6" style="display: hidden;">
+                                                            <div class="radio" style="float: left; padding-right: 10px;">
+                                                                <label>
+                                                                    <input checked="checked" value="1" name="on_sale" type="radio"><span class="text">是</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio" style="float: left;">
+                                                                <label>
+                                                                    <input name="on_sale" value="0" class="inverted" type="radio"><span class="text">否</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">所属栏目</label>
+                                                        <div class="col-sm-6">
+                                                            <select name="category_id">
+                                                                <option value="">请选择</option>
+                                                                {volist name='cate_list' id="cate"}
+                                                                <option value="{$cate.id}">{$cate.cate_name}</option>
+                                                                {/volist}
+                                                            </select>
+                                                        </div>
+                                                        <p class="help-block col-sm-4 red">* 必填</p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">所属品牌</label>
+                                                        <div class="col-sm-6">
+                                                            <select name="brand_id">
+                                                                <option value="">请选择</option>
+                                                                {volist name=':model("brand")->all()' id="brand"}
+                                                                <option value="{$brand.id}">{$brand.brand_name}</option>
+                                                                {/volist}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">市场价格</label>
+                                                        <div class="col-sm-6">
+                                                            <input class="form-control" placeholder="" name="market_price" type="text" required="">
+                                                        </div>
+                                                        <p class="help-block col-sm-4 red">* 必填</p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">本店价格</label>
+                                                        <div class="col-sm-6">
+                                                            <input class="form-control" placeholder="" name="shop_price" type="text" required="">
+                                                        </div>
+                                                        <p class="help-block col-sm-4 red">* 必填</p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">重量</label>
+                                                        <div class="col-sm-6">
+                                                            <input class="form-control" placeholder="" name="goods_weight" type="text" required="" style="width: 300px; display: inline-block;" >
+                                                            <select name="wieght_unit">
+                                                                <option value="kg">kg</option>
+                                                                <option value="k">k</option>
+                                                            </select>
+                                                        </div>
+                                                        <p class="help-block col-sm-4 red">* 必填</p>
+                                                    </div>
+                                                </div>
+                                                <div id="goodsdes" class="tab-pane">
+                                                    <textarea id="goods_des" name="goods_des"></textarea>
+                                                </div>
+                                                <div id="mbprice" class="tab-pane">
+                                                    {volist name=':model("member_level")->all()' id="mlevel"}
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">{$mlevel.level_name}</label>
+                                                        <div class="col-sm-6">
+                                                            <input class="form-control" placeholder="" name="mp[{$mlevel.id}]" type="text">
+                                                        </div>
+                                                    </div>
+                                                    {/volist}
+                                                </div>
+                                                <div id="goodsattr" class="tab-pane">
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">商品属性</label>
+                                                        <div class="col-sm-6">
+                                                            <select name="type_id" class="form-control">
+                                                                <option value="">请选择</option>
+                                                                {volist name=':model("type")->all()' id="db_type"}
+                                                                <option value="{$db_type.id}">{$db_type.type_name}</option>
+                                                                {/volist}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="filter" class="tab-pane">
+                                                    <div class="form-group filter"  style="overflow: hidden;" >
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right">搜索过滤分类</label>
+                                                        <div class="col-sm-6">
+                                                            <div class="extends form-control" style="border: 0; box-shadow: none; float: left; width: 30px;">[+]</div>
+                                                            <select style="float: left;" class="option"name='ids[]'>
+                                                                <option value="0" >请选择</option>
+                                                                {volist name=':model("filter")->where("type=1")->all()' id='catef'}
+                                                                <option value="{$catef.id}">{$catef.name}</option>
+                                                                {/volist}
+                                                            </select>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="goodsphoto" class="tab-pane">
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-sm-2 control-label no-padding-right"></label>
+                                                        <div class="col-sm-6">
+                                                            <a href="javascript:void(0)" class='addphoto'>[+]</a>
+                                                            <input class="form-control"  name="goods_images[]" type="file" style="border: none; box-shadow: none; width: 300px; display: inline-block;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn btn-default">保存信息</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+    </div>  
 </div>
-
-<div id="footer">
-共执行 9 个查询，用时 0.025161 秒，Gzip 已禁用，内存占用 3.258 MB<br />
-版权所有 &copy; 2005-2012 上海商派网络科技有限公司，并保留所有权利。</div>
-</body>
-</html>
-
-<!--导入在线编辑器 -->
-<link href="../static/umeditor1_2_2-utf8-php/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="../static/umeditor1_2_2-utf8-php/third-party/jquery.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="../static/umeditor1_2_2-utf8-php/umeditor.config.js"></script>
-<script type="text/javascript" charset="utf-8" src="../static/umeditor1_2_2-utf8-php/umeditor.min.js"></script>
-<script type="text/javascript" src="../static/umeditor1_2_2-utf8-php/lang/zh-cn/zh-cn.js"></script>
+ 
+<script src="__STATIC__plus/ueditor/ueditor.config.js"></script>
+<script src="__STATIC__plus/ueditor/ueditor.all.min.js"></script>
+<script src="__STATIC__plus/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script>
-UM.getEditor('goods_desc', {
-	initialFrameWidth : "100%",
-	initialFrameHeight : 350
-});
+UE.getEditor('goods_des',{initialFrameWidth:"100%" ,initialFrameHeight:400});
+let time = setInterval(() => {
+    for (let i = 0; i < $('.edui-colorpicker-nocolor').length; i++) 
+        $('.edui-colorpicker-nocolor').eq(i).css('border', 'none')
+
+    if ( 
+        $('.edui-colorpicker-nocolor').eq(0).css('border') == ""
+        && $('.edui-colorpicker-nocolor').eq(1).css('border') == ""
+     ) {
+        clearInterval(time);
+    }
+})
+</script>
+
+<script>
+
+let tmplate = (name, value) => {
+    return `
+    <div class="form-group">
+        <label for="username" class="col-sm-2 control-label no-padding-right">${name}</label>
+        <div class="col-sm-6">
+            ${value}
+        </div>
+    </div>
+    `  
+}
+
+let getAttr = type_id => {
+    axios.get('../attr/getAttr', {params: {type_id}}).then(success => {
+        for (let o of success.data) {
+            let str = `<a href="javascript:void(0)" class='extends'>[+]</a><select name="goods_attr[${o.id}][]">
+                    <option value="">请选择</option>`
+            let arr = o.attr_values.split(',')
+            if ( o.attr_type == '单选' ) {
+                for (let a of arr) str += `<option>${a.trim()}</option>`
+            } else if ( o.attr_type == '唯一' ) {
+                str = `<a href="javascript:void(0)" class='extends'></a><select name="goods_attr[${o.id}][]">
+                    <option value="">请选择</option>`
+                for (let a of arr) str += `<option>${a.trim()}</option>`
+            }
+
+            str += `</select> <input class="form-control" placeholder="价格" name="attr_price[${o.id}][]" type="text" style="width: 150px; display: inline-block;">`
+
+            if ( !o.attr_values ) str = `<input class="form-control" placeholder="" name="goods_attr[${o.id}]" type="text" >`
+
+            $('#goodsattr').append(tmplate(o.attr_name, str))
+        }
+    })
+}
+
+$('select[name=type_id]').change(function() {
+    $(this).parent().parent().siblings().remove()
+    getAttr($(this).val())
+})
+
+$('#goodsattr').delegate('.extends', 'click', function() {
+    if ( $(this).text() == '[+]' ) {
+        let newEl = $(this).parent().parent()[0].cloneNode(true)
+        $(newEl).find('.extends').text('[-]')
+        $($(this).parent().parent()).after(newEl)
+    } else if ( $(this).text() == '[-]' ) {
+        $(this).parent().parent().remove()
+    }
+})
+
+$('#goodsphoto').delegate('.addphoto', 'click', function() {
+    if ( $(this).text() == '[+]' ) {
+        let newEl = $(this).parent().parent()[0].cloneNode(true)
+        $(newEl).find('.addphoto').text('[-]')
+        $($(this).parent().parent()).after(newEl)
+    } else if ( $(this).text() == '[-]' ) {
+        $(this).parent().parent().remove()
+    }
+})
+
+if ( $('select[name=type_id]').val() != '') getAttr($('select[name=type_id]').val())
+
 </script>
 
 
+<script>
+$('.widget-body').delegate('.extends', 'click', function() {
+    if ( $(this).text() == '[+]' ) {
+        let newEl = $(this).parent().parent()[0].cloneNode(true)
+        $(newEl).find('.extends').text('[-]')
+        $($(this).parent().parent()).after(newEl)
+    } else if ( $(this).text() == '[-]' ) {
+        $(this).parent().parent().remove()
+    }
+})
+let url = '{:url("@/filter/getfiltervalues/id/", '', false)}'
+$('.widget-body').delegate('.option', 'change', function() {
+    getfiltervs($(this), $(this).parents('.filter').index());
+})
 
+for (var i = 0; i < $('.option').length; i++) {
+    if ( $('.option').eq(i).val() != 0 ) {
+        getfiltervs($('.option').eq(i), $('.option').eq(i).parents('.filter').index())
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function getfiltervs(own, index) {
+    axios.get(url+own.val()).then(resolve => {
+        own.next().remove()
+        own.parent().append('<div class="col-sm-6">')
+        for (let a of resolve.data.arr) {
+            own.next().append(
+                `
+                    <label>
+                        <input name="value[${a.filter_id}][]" type="checkbox" value="${a.id}">
+                        <span class="text form-control" style="border: 0; box-shadow: none;">${a.name}</span>
+                    </label>
+                `
+            )
+            own.parent().find('select').attr('name', 'ids['+a.filter_id+']')
+        }
+    })
+}
+</script>

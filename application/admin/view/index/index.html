@@ -1,18 +1,25 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title>ECSHOP 管理中心</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+{layout name='public/layout'}
 
-<frameset rows="76,*" framespacing="0" border="0">
-    <frame src="top.html" id="header-frame" name="header-frame" frameborder="no" scrolling="no">
-    <frameset cols="180,*" framespacing="0" border="0" id="frame-body">
-        <frame src="menu.html" id="menu-frame" name="menu-frame" frameborder="no">
-        <frame src="main.html" id="main-frame" name="main-frame" frameborder="no">
-    </frameset>
-</frameset>
-</head>
-<body>
-</body>
-</html>
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <!-- Page Sidebar -->{include file="public/left"}<!-- /Page Sidebar -->
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                    <li class="active">控制面板</li>
+                </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+
+            <!-- Page Body -->
+            <div class="page-body">
+                <div><h1>template</h1></div>
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+    </div>
+</div>

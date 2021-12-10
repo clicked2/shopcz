@@ -1,0 +1,171 @@
+{layout name='public/layout'}
+<body class="bg-ligtGary">
+    
+<div class="header header-cart">
+    <div class="w w1200">
+        <div class="logo">
+            <div class="logoImg"><a href="index.php"><img src="__STATIC__index/img/logo.gif" /></a></div>
+            <div class="tit">结算页</div>
+        </div>
+                <div class="cart-stepflex">
+            <div class="cart-step-item cur">
+                <span>1.我的购物车</span>
+                <i class="iconfont icon-arrow-right-alt"></i>
+            </div>
+            <div class="cart-step-item cur">
+                <span>2.填写订单信息</span>
+                <i class="iconfont icon-arrow-right-alt"></i>
+            </div>
+            <div class="cart-step-item curr">
+                <span>3.成功提交订单</span>
+            </div>
+        </div>
+            </div>
+</div>        
+        <div class="container">
+        <div class="w w1200">
+                        
+            <div class="payOrder-warp" id="pay_main">
+                <div class="payOrder-desc">
+                    <div class="pay-top">
+                        <h3>订单提交成功，去付款咯！</h3>
+                        <div class="pay-total">
+                            <span>应付总额：</span>
+                            <div class="pay-price">￥2503.30</div>
+                        </div>
+                    </div>
+                    <div class="pay-txt">
+                        <p>订单号：<em id="nku">2018062516107865138</em></p>
+                        <p>您选定的支付方式为：<span id="paymode">在线支付</span></p>
+            	                    <p>配送方式: <span id="express">顺丰速运</span></p>
+                            </div>
+    <div class="o-list">
+                        <div class="o-list-info">
+                            <span id="shdz">寄送至：安徽  蚌埠  东市区  &nbsp;&nbsp;中国河南商丘</span>
+                            <span id="shr">收货人：丁丁</span>
+                            <span id="mobile">13781545565</span>
+                        </div>
+                    </div>
+    <a href="flow.php?step=pdf&order=17" target="_blank" class="orderPrint ftx-05">保存订单并打印</a>&nbsp;&nbsp;
+                    <a href="index.php" target="_blank" class="orderPrint ftx-05">继续购物</a>
+                </div>
+                
+                            </div>
+                      
+                    </div>
+    </div>
+    <div id="pay_Dialog" class="hide">
+    	<div class="pat">请您在新打开的支付页面进行支付，支付完成前请不要关闭该窗口</div>
+        <div class="paydia-warp">
+        	<i></i>
+            <div class="con">
+            	<div class="con-warp con-success">
+                    <h3>支付成功了</h3>
+                    <a href="user.php?act=order_list" class="ftx-05">订单详情></a>
+                </div>
+                <div class="con-warp con-fail">
+                	<h3>支付失败了</h3>
+                	<a href="article.php?id=17" class="ftx-05">支付遇到问题></a>
+                    <a href="index.php" class="ftx-05">继续购物></a>
+                </div>
+            </div>
+        </div>
+    </div>
+	        
+    
+        
+    
+        
+    
+
+<script type="text/javascript" src="__STATIC__index/js/suggest.js"></script><script type="text/javascript" src="__STATIC__index/js/scroll_city.js"></script><script type="text/javascript" src="__STATIC__index/js/utils.js"></script>
+<script type="text/javascript" src="__STATIC__index/js/warehouse.js"></script><script type="text/javascript" src="__STATIC__index/js/warehouse_area.js"></script>
+    <script type="text/javascript" src="__STATIC__index/js/jquery.SuperSlide.2.1.1.js"></script><script type="text/javascript" src="__STATIC__index/js/common.js"></script><script type="text/javascript" src="__STATIC__index/js/shopping_flow.js"></script><script type="text/javascript" src="__STATIC__index/js/jquery.nyroModal.js"></script><script type="text/javascript" src="__STATIC__index/js/perfect-scrollbar/perfect-scrollbar.min.js"></script><script type="text/javascript" src="__STATIC__index/js/lib_ecmobanFunc.js"></script><script type="text/javascript" src="__STATIC__index/js/jquery.validation.min.js"></script>    	
+	<script type="text/javascript" src="themes/ecmoban_dsc2017/js/dsc-common.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc2017/js/jquery.purebox.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc2017/js/region.js"></script>
+    
+	    <script type="text/javascript">
+    	$(function(){
+			$(".p-mode-list .p-mode-item").click(function(){
+				var onlinepay_type = $(this).attr('flag');
+				var order_sn = $(this).attr('order_sn');
+				$.ajax({
+					async: false,
+					url:"flow.php?act=onlinepay_edit&onlinepay_type="+onlinepay_type+"&order_sn="+order_sn,
+				});
+			});
+			
+			
+			$(".p-mode-item input").click(function(){
+				var content = $("#pay_Dialog").html();
+				pb({
+					id:"payDialog",
+					title:json_languages.payTitle,
+					width:550,
+					height:300,
+					content:content,
+					drag:false,
+					foot:false
+				});
+			});
+			
+			//微信支付定时查询订单状态 by wanglu
+    		checkOrder();
+
+			//微信扫码
+			$("[data-type='wxpay']").on("click",function(){
+				var content = $("#wxpay_dialog").html();
+				pb({
+					id: "scanCode",
+					title: "",
+					width: 716,
+					content: content,
+					drag: true,
+					foot: false,
+					cl_cBtn: false,
+					cBtn: false
+				});
+			});
+		});
+		
+		var timer;
+		function checkOrder(){
+			var pay_name = "在线支付";
+			var pay_status = "0";
+			var url = "flow.php?step=checkorder&order_id=17";
+			if(pay_name == json_languages.payment_is_online && pay_status == 0){
+				$.get(url, {}, function(data){
+					//已付款
+					if(data.code > 0 && data.pay_code == 'wxpay'){
+						clearTimeout(timer);
+						location.href = "respond.php?code=" + data.pay_code + "&status=1";
+					}
+				},'json');
+			}
+			timer = setTimeout("checkOrder()", 5000);
+		}
+    </script>
+	
+    <script type="text/javascript">
+        $(function(){
+			$("input[name='store_order']").val(0);
+			
+            $(document).on('click', "[ectype='store_order']", function(){
+                var i = 0;
+                $("*[ectype='ckShopAll']").each(function(){
+                    var t = $(this);
+                    if(t.prop("checked") == true){
+                        i++
+                    }
+                });
+                
+                if(i > 1){
+                    pbDialog(json_languages.not_seller_batch_goods_num,"",0,'','',55);
+                }else{
+                    $("input[name='store_order']").val(1);
+                    $("form[name='formCart']").submit();
+                }
+            });
+        })  
+    </script>  

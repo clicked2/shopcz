@@ -2,190 +2,344 @@
 namespace app\admin\model;
 use think\Model;
 use think\Image;
+
 use think\facade\Cache;
 
-use app\admin\model\Brand as BrandModel;
+//use app\admin\model\Conf;
 
 
 class Goods extends Model
 {
-	//自动写入时间
-	protected $autoWriteTimestamp = 'datetime';
-	//修改创建时间列名
-	protected $createTime = 'addtime';
-	//自动添加数据
-	protected $insert = [
-		'is_delete' => 0
-	];
-	//设置只读字段
-	protected $readonly = [
-		'addtime'
-	];
-	//设置类型转换
-	protected $type = [
-		'is_on_sale' => 'integer',
-		'is_delete' => 'integer',
-	];
+	protected $autoWriteTimestamp = true;
+	protected $createTime = 'create_time';
+	protected static function init()
+	{
+		self::event('before_insert', function($query) {
+			$info = $query->logoUpload('og_thumb');
+			if ( $info ) {
+				$dir = substr($info->getSaveName(), 0, strpos($info->getSaveName(), DS));
+		 		$path = $info->getFileName();
+		 		$query->og_thumb = $dir . DS . $path;
+		 		$query->big_thumb = $dir . DS .'big_' . $path;
+		 		$query->mid_thumb = $dir . DS .'mid_' . $path;
+		 		$query->sm_thumb = $dir . DS .'sm_' . $path;
+		 		$image = Image::open('static'. DS .'uploads'. DS .''. $dir . DS . $path);
+		 		$bigthumb = Conf::field('value')->where('ename', 'bigthumb')->find();
+		 		$image->crop($image->width(), $image->height(), 0, 0, $bigthumb['value'], $bigthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'big_' . $path);
+		 		
+		 		$midthumb = Conf::field('value')->where('ename', 'midthumb')->find();
+		 		$image->crop($image->width(), $image->height(), 0, 0, $midthumb['value'], $midthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'mid_' . $path);
 
-	//反向关联品牌表
-	public function brand()
-	{
-		return $this->belongsTo('brand');
-	}
-
-	
-	public function members()
-	{
-		return $this->belongsToMany('member_level', 'member_price', 'level_id');
-	}
-
-
-	//设置全局范围查询
-	protected function base($query)
-	{
-		$request = request();
-		if ( $request->param('ios') != "" ) {
-			$status = (int)$request->param('ios');
-			$query->where('is_on_sale', '=', $status);
-		}
-	}
-
-
-	//创建一个是否上架的获取器 将10改成是否
-	public function getIsOnSaleAttr($value)
-	{
-		$status = [0 => '否', 1 => '是'];
-		return $status[$value];
-	}
-	//创建一个是否删除的获取器 将10改成是否
-	public function getIsDeleteAttr($value)
-	{
-		$status = [0 => '否', 1 => '是'];
-		return $status[$value];
-	}
-
-	//创建一个搜索器 模糊搜索商品名称
-	public function searchGoodsNameAttr($query, $value)
-	{
-		$query->where('goods_name', 'like', '%'.$value.'%');
-	}
-	//创建一个搜索器 模糊搜索价格区间
-	public function searchPriceBetweenAttr($query, $value)
-	{
-		$query->whereBetween('shop_price', $value);
-	}
-	//创建一个搜索器 模糊搜索时间区间
-	public function searchCreateTimeAttr($query, $value)
-	{
-		$query->whereBetweenTime('addtime', $value[0], $value[1]);
-	}
-	//关联表 新增会员价格
-	public function addMemberPrice($request)
-	{
-		$param = $request->param('member_price');
-		 var_dump($param );
-		 exit;
-
-		foreach ($param as $key => $value) {
-			$arr[] = ['price' => $value, 'goods_id' => $this->id, 'level_id' => $key];
-		}
-		return $this->memberPrice()->saveAll($arr);
-	}
-	//关联表 修改会员价格
-	public function removeMemberPrice($request, $id)
-	{
-		db('member_price')->where('goods_id', $id)->delete();
-		return self::addMemberPrice($request);
-	}
-
-	//创建一个查询范围 用来做排序 
-	public function scopeResultOrder($query, $value)
-	{
-		switch ($value) {
-			case '':
-				$query->order('addtime', 'desc'); //默认
-				break;
-			case 'id_desc':
-				$query->order('addtime', 'desc');
-				break;
-			case 'id_asc':
-				$query->order('addtime');
-				break;
-			case 'price_desc':
-				$query->order('shop_price', 'desc');
-				break;
-			case 'price_asc':
-				$query->order('shop_price');
-				break;	
-			default:
-				# code...
-				break;
-		}
-	}
-
-	//上传图片 成功返回真
-	public function logoUpload($update = false)
-	{
-		$request = request();
-		if ( empty($_FILES['logo']['tmp_name']) ) {
-			if ( !$update ) {
-				$this->info = lang('logo_empty');
-				return false;
+		 		$smthumb = Conf::field('value')->where('ename', 'smthumb')->find();
+		 		$image->crop($image->width(), $image->height(), 0, 0, $smthumb['value'], $smthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'sm_' . $path);
 			}
-		} else {
-			//图片处理
-			$file = \think\facade\Request::file('logo');
+			$query->goods_code = time().rand(100000, 999999);
+
+
+		});
+
+		self::event('after_insert', function($query) {
+			$mp = new MemberPrice();
+			$arr = [];
+
+			if ( is_array( request()->param('mp') ) ) {
+				foreach (request()->param('mp') as $key => $value)
+					if ( !empty($value) ) $arr[] = ['price' => $value, 'member_level_id' => $key, 'goods_id' => $query->id];
+				$mp->saveAll($arr);
+			}
+
+
+			//插入推荐位
+			if ( is_array( request()->param('rec_check') ) ) {
+				$arr = [];
+				foreach (request()->param('rec_check') as $key => $value) {
+					$arr[] = ['recpos_id' => $value, 'value_id' => $query->id, 'value_type' => 1];
+				}
+				if ( !empty($arr) ) {
+					db('rec_item')->insertAll($arr);
+				}
+			}
+			
+
+			//插入商品属性
+			if ( !empty(request()->param('type_id')) ) {
+				$attrs = [];
+				$prices = request()->param('attr_price');
+				if ( is_array(request()->param('goods_attr')) ) {
+					foreach (request()->param('goods_attr') as $key => $value) {
+						if ( !empty($value) ) {
+							if ( is_array($value) ) {
+								foreach ($value as $k => $v) {
+									if ( !empty($v) )
+										$attrs[] = ['attr_id' => $key, 'goods_id' => $query->id, 'attr_value' => $v, 'attr_price' => $prices[$key][$k]];
+								}
+							} else {
+								$attrs[] = ['attr_id' => $key, 'goods_id' => $query->id, 'attr_value' => $value];
+							}
+						}
+					}
+				}
+				
+				if ( !empty($attrs) ) {
+					$attr = new GoodsAttr();
+					$attr->saveAll($attrs);
+				}
+			}
+
+			//搜索过滤关联
+			$arr = [];
+			if ( is_array(request()->param('ids')) && is_array(request()->param('values')) ) {
+				foreach (request()->param('ids') as $key => $value) {
+					if ( array_key_exists($key, request()->param('values')) ) {
+						foreach (request()->param('values')[$key] as $k => $v) {
+							if ( $v ) {
+								$arr[] = ['goods_id' => $query->id, 'filter_id' => $v];
+							}
+						}
+						$arr[] = ['goods_id' => $query->id, 'filter_id' => $value];
+					}
+				}
+			}
+			
+			if ( !empty($arr) ) {
+				db('goods_filter_item')->insertAll($arr);
+			}
+			
+			//插入商品相册
+			if ( isset($_FILES['goods_images']) && !empty($_FILES['goods_images']['tmp_name']) ) {
+				$photos = new GoodsPhoto();
+				$infos = $query->uploads('goods_images');
+
+				$arr = [];
+				$bigthumb = Conf::field('value')->where('ename', 'bigthumb')->find();
+				$midthumb = Conf::field('value')->where('ename', 'midthumb')->find();
+				$smthumb = Conf::field('value')->where('ename', 'smthumb')->find();
+				if ( $infos ) {
+					foreach ($infos as $key => $value) {
+						$dir = substr($value['saveName'], 0, strpos($value['saveName'], DS));
+				 		$path = $value['fileName'];
+						$arr[] = ['goods_id' => $query->id, 'og_photo' => $dir . DS . $path, 'big_photo' => $dir . DS .'big_' . $path, 'mid_photo' =>  $dir . DS .'mid_' . $path, 'sm_photo' => $dir . DS .'sm_' . $path];
+				 		$image = Image::open('static'. DS .'uploads'. DS .''. $dir . DS . $path);
+
+				 		$image->crop($image->width(), $image->height(), 0, 0, $bigthumb['value'], $bigthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'big_' . $path);
+				 		$image->crop($image->width(), $image->height(), 0, 0, $midthumb['value'], $midthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'mid_' . $path);
+				 		$image->crop($image->width(), $image->height(), 0, 0, $smthumb['value'], $smthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'sm_' . $path);
+					}
+				}
+				$photos->saveAll($arr);
+			}
+		});
+		self::beforeDelete(function($query) {
+			//删除图片
+			$query->imageDelete();
+			//会员价格
+			MemberPrice::where('goods_id', $query->id)->delete();
+			//推荐位
+			db('rec_item')->where(['value_id' => $query->id, 'value_type' => 1])->delete();
+			//属性
+			GoodsAttr::where('goods_id', $query->id)->delete();
+
+			//搜索过滤关联
+			db('goods_filter_item')->where('goods_id', $query->id)->delete();
+			
+			//相册
+			$photo = GoodsPhoto::where('goods_id', $query->id)->select();
+			foreach ($photo as $key => $value) {
+				if ( !empty($value->sm_photo) ) @unlink('static' . DS . 'uploads' . DS . $value->sm_photo);
+				if ( !empty($value->mid_photo) ) @unlink('static' . DS . 'uploads' . DS . $value->mid_photo);
+				if ( !empty($value->big_photo) ) @unlink('static' . DS . 'uploads' . DS . $value->big_photo);
+			}
+			GoodsPhoto::where('goods_id', $query->id)->delete();
+		});
+
+		self::beforeUpdate(function($query) {
+			$info = $query->logoUpload('og_thumb', true);
+			if ( $info ) {
+				$dir = substr($info->getSaveName(), 0, strpos($info->getSaveName(), DS));
+		 		$path = $info->getFileName();
+		 		$query->og_thumb = $dir . DS . $path;
+		 		$query->big_thumb = $dir . DS .'big_' . $path;
+		 		$query->mid_thumb = $dir . DS .'mid_' . $path;
+		 		$query->sm_thumb = $dir . DS .'sm_' . $path;
+
+		 		$bigthumb = Conf::field('value')->where('ename', 'bigthumb')->find();
+				$midthumb = Conf::field('value')->where('ename', 'midthumb')->find();
+				$smthumb = Conf::field('value')->where('ename', 'smthumb')->find();
+
+		 		$image = Image::open('static'. DS .'uploads'. DS .''. $dir . DS . $path);
+		 		$image->crop($image->width(), $image->height(), 0, 0, $bigthumb['value'], $bigthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'big_' . $path);
+		 		$image->crop($image->width(), $image->height(), 0, 0, $midthumb['value'], $midthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'mid_' . $path);
+		 		$image->crop($image->width(), $image->height(), 0, 0, $smthumb['value'], $smthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'sm_' . $path);
+			}
+			$query->goods_code = time().rand(100000, 999999);
+			
+		});
+
+		self::afterUpdate(function($query) {
+			$mp = new MemberPrice();
+			$arr = [];
+			if ( is_array(request()->param('mp')) ) {
+				foreach (request()->param('mp') as $key => $value)
+					if ( !empty($value) ) $arr[] = ['price' => $value, 'member_level_id' => $key, 'goods_id' => $query->id];
+			}
+
+			if ( empty($arr) ) MemberPrice::where('goods_id', $query->id)->delete();
+			$mp->saveAll($arr);
+			
+			//推荐位
+			$arr = [];
+			if ( is_array(request()->param('rec_check')) ) {
+				foreach (request()->param('rec_check') as $key => $value) {
+					$arr[] = ['recpos_id' => $value, 'value_id' => $query->id, 'value_type' => 1];
+				}
+			}
+
+			db('rec_item')->where(['value_id' => $query->id, 'value_type' => 1])->delete();
+			if ( !empty($arr) ) {
+				db('rec_item')->insertAll($arr);
+			}
+
+			//商品属性
+			if ( !empty(request()->param('type_id')) ) {
+				$attrs = [];
+				$prices = request()->param('attr_price');
+				if ( is_array(request()->param('goods_attr')) ) {
+					foreach (request()->param('goods_attr') as $key => $value) {
+						if ( !empty($value) ) {
+							if ( is_array($value) ) {
+								foreach ($value as $k => $v) {
+									if ( !empty($v) ) {
+										$a = db('goods_attr')->field('goods_id, attr_value, attr_price')->where('goods_id' , $query->id)->whereLike('attr_value', '%'.$v.'%')->find();
+										
+										if ( $a && $a['attr_price'] != $prices[$key][$k] ) {
+											db('goods_attr')->field('goods_id, attr_value, attr_price')->where('goods_id' , $query->id)->whereLike('attr_value', '%'.$v.'%')->update(['attr_price' => $prices[$key][$k]]);
+										} else if ( !$a ) {
+											$attrs[] = ['attr_id' => $key, 'goods_id' => $query->id, 'attr_value' => $v, 'attr_price' => $prices[$key][$k]];
+										}
+									}
+								}
+							} else {
+								$a = db('goods_attr')->field('goods_id, attr_value, attr_id')->where(['goods_id' => $query->id, 'attr_id' => $key])->find();
+								if ( $a && $a['attr_value'] != $value ) {
+									db('goods_attr')->field('goods_id, attr_value, attr_id')->where(['goods_id' => $query->id, 'attr_id' => $key])->update(['attr_value' => $value]);
+								} else if ( !$a ) {
+									$attrs[] = ['attr_id' => $key, 'goods_id' => $query->id, 'attr_value' => $value];
+								}
+							}
+						}
+					}
+				}
+				if ( !empty($attrs) ) {
+					$attr = new GoodsAttr();
+					$attr->saveAll($attrs);
+				}
+			}
+			
+			//搜索过滤关联
+			$arr = [];
+			if ( is_array(request()->param('ids')) && is_array(request()->param('values')) ) {
+				foreach (request()->param('ids') as $key => $value) {
+					if ( array_key_exists($key, request()->param('values')) ) {
+						foreach (request()->param('values')[$key] as $k => $v) {
+							if ( $v ) {
+								$arr[] = ['goods_id' => $query->id, 'filter_id' => $v];
+							}
+						}
+						$arr[] = ['goods_id' => $query->id, 'filter_id' => $value];
+					}
+				}
+			}
+			
+			// dump(request()->param('ids'));
+			// dump(request()->param('values'));
+			// exit;
+			db('goods_filter_item')->where(['goods_id' => $query->id])->delete();
+			if ( !empty($arr) ) {
+				db('goods_filter_item')->insertAll($arr);
+			}
+
+
+			//商品相册
+			if ( isset($_FILES['goods_images'])  && !empty($_FILES['goods_images']['tmp_name']) ) {
+				$photos = new GoodsPhoto();
+				$infos = $query->uploads('goods_images');
+				$arr = [];
+				$bigthumb = Conf::field('value')->where('ename', 'bigthumb')->find();
+				$midthumb = Conf::field('value')->where('ename', 'midthumb')->find();
+				$smthumb = Conf::field('value')->where('ename', 'smthumb')->find();
+
+				if ( $infos && is_array($infos) ) {
+					foreach ($infos as $key => $value) {
+						$dir = substr($value['saveName'], 0, strpos($value['saveName'], DS));
+				 		$path = $value['fileName'];
+						$arr[] = ['goods_id' => $query->id, 'og_photo' => $dir . DS . $path, 'big_photo' => $dir . DS .'big_' . $path, 'mid_photo' =>  $dir . DS .'mid_' . $path, 'sm_photo' => $dir . DS .'sm_' . $path];
+
+
+				 		$image = Image::open('static'. DS .'uploads'. DS .''. $dir . DS . $path);
+				 		$image->crop($image->width(), $image->height(), 0, 0, $bigthumb['value'], $bigthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'big_' . $path);
+				 		$image->crop($image->width(), $image->height(), 0, 0, $midthumb['value'], $midthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'mid_' . $path);
+				 		$image->crop($image->width(), $image->height(), 0, 0, $smthumb['value'], $smthumb['value'])->save('static'. DS .'uploads'. DS . $dir . DS . 'sm_' . $path);
+						//@unlink('static'. DS .'uploads'. DS .''. $dir . DS . $path);
+					}
+				}
+				$photos->saveAll($arr);
+			}
+		});
+	}
+
+	//上传图片 成功返回路径
+	public function logoUpload($imgName, $update = false)
+	{
+		if (  isset($_FILES[$imgName]) && !empty($_FILES[$imgName]['tmp_name']) ) {
+			$file = request()->file($imgName);
+
 			$info = $file->validate([
 				'size' => 1024*1024,
 				'ext'  => 'jpg,png,gif,jpeg'
-	 		])->move('static/uploads');
+	 		])->move('static'. DS .'uploads');
 			
 			if ( $info ) {
-				if ( $update ) {
-					//删除图片
-					self::imageDelete();
-				}
-				//上传图片
-				self::imageUpload($info);
+				if ( $update ) self::imageDelete(); //删除图片
+				return $info;
 			} else {
 	 			$this->info = $file->getError();
-	 			return false;
 	 		}
 		}
-		//设置准备入库字段
-		$this->goods_name = $request->param('goods_name');
-		$this->market_price = $request->param('market_price');
-		$this->shop_price = $request->param('shop_price');
-		$this->goods_desc = $request->param('goods_desc');
-		$this->is_on_sale = $request->param('is_on_sale');
- 		$this->brand_id = $request->param('brand_id');
-
- 		return true;
+		return false;
 	}
-	public function imageUpload($info)
-	{
-		$dir = substr($info->getSaveName(), 0, strpos($info->getSaveName(), "\\"));
- 		$path = $info->getFileName();
- 		$this->logo = $dir . '/' . $path;
- 		$image = Image::open('static/uploads/'. $dir . '/' . $path);
- 		$image->crop($image->width(), $image->height(), 0, 0, 700, 700)->save('static/uploads/'. $dir . '/mbig_' . $path);
- 		$this->mbig_logo = $dir . '/mbig_' . $path;
- 		$image->crop($image->width(), $image->height(), 0, 0, 350, 350)->save('static/uploads/'. $dir . '/big_' . $path);
- 		$this->big_logo = $dir . '/big_' . $path;
- 		$image->crop($image->width(), $image->height(), 0, 0, 150, 150)->save('static/uploads/'. $dir . '/mid_' . $path);
- 		$this->mid_logo = $dir . '/mid_' . $path;
- 		$image->crop($image->width(), $image->height(), 0, 0, 50, 50)->save('static/uploads/'. $dir . '/sm_' . $path);
- 		$this->sm_logo = $dir . '/sm_' . $path;
-	}
+	//删除图片
 	public function imageDelete() {
-		//删除图片
-		$logoPath = $this->logo;
+		$logoPath = $this->og_thumb;
 		$date = substr($logoPath, 0, 9);
 		$path = substr($logoPath, 9, strlen($logoPath));
-		unlink('static/uploads/'.$logoPath);
-		unlink('static/uploads/'.$date.'/sm_'.$path);
-		unlink('static/uploads/'.$date.'/mid_'.$path);
-		unlink('static/uploads/'.$date.'/big_'.$path);
-		unlink('static/uploads/'.$date.'/mbig_'.$path);
+		@unlink('static' . DS . 'uploads' . DS . $logoPath);
+		@unlink('static' . DS . 'uploads' . DS . $date . DS . 'sm_' . $path);
+		@unlink('static' . DS . 'uploads' . DS . $date . DS . 'mid_' . $path);
+		@unlink('static' . DS . 'uploads' . DS . $date . DS . 'big_' . $path);
+	}
+
+	//商品相册
+	public function uploads($imgName)
+	{
+		$files =request()->file()[$imgName];
+		$arr = [];
+		foreach ($files as $file) {
+			$info = $file->validate([
+				'size' => 1024*1024,
+				'ext'  => 'jpg,png,gif,jpeg'
+	 		])->move('static'. DS .'uploads');
+			if ( $info ) {
+				$arr[] = ['saveName' => $info->getSaveName(), 'fileName' => $info->getFileName()];
+			} else {
+				return $file->getError();
+			}
+		}
+		return $arr;
+	}
+
+	public function getOnSaleAttr($value)
+	{
+		$status = [0 => '../static/admin/images/error.png', 1 => '../static/admin/images/right.png'];
+		return $status[$value];
 	}
 }

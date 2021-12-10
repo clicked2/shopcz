@@ -1,0 +1,235 @@
+{layout name='public/layout'}
+<!-- /头部 -->
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <!-- Page Sidebar -->
+        <div class="page-sidebar" id="sidebar">
+            <!-- Page Sidebar Header-->
+            <div class="sidebar-header-wrapper">
+                <input class="searchinput" type="text">
+                <i class="searchicon fa fa-search"></i>
+                <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
+            </div>
+            <!-- /Page Sidebar Header -->
+            <!-- Sidebar Menu -->
+            {include file='public/left'}
+            <!-- /Sidebar Menu -->
+        </div>
+        <!-- /Page Sidebar -->
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{:url('../admin')}">系统</a>
+                    </li>
+                    <li>
+                        <a href="{:url('./conf/read')}">配置管理</a>
+                    </li>
+                    <li class="active">配置列表</li>
+                </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+
+            <!-- Page Body -->
+            <div class="page-body">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="widget-main ">
+                                    <div class="tabbable">
+                                        <ul class="nav nav-tabs tabs-flat" id="myTab11">
+                                            <li class="active">
+                                                <a data-toggle="tab" href="#home11">
+                                                    店铺配置
+                                                </a>
+                                            </li>
+                                            <li class="">
+                                                <a data-toggle="tab" href="#profile11">
+                                                    商品配置
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content tabs-flat">
+                                            <div id="home11" class="tab-pane active">
+                                                <div id="horizontal-form">
+                                                    <form class="form-horizontal" role="form" action="../conf/confsave" method="post" enctype="multipart/form-data">
+                                                        {volist name=':model("conf")->where("conf_type=1")->order("sort desc")->all()' id='obj'}
+                                                        <div class="form-group">
+                                                            <label for="username" class="col-sm-2 control-label no-padding-right">{$obj.cname}</label>
+                                                            <div class="col-sm-6">
+                                                                {eq name="obj.form_type" value="input"}
+                                                                <input class="form-control" placeholder="" name="{$obj.ename}" type="text" value="{$obj.value}">
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="radio"}
+                                                                <div class="ardio">
+                                                                    {php}
+                                                                    $arr = explode(',', $obj["values"]);
+                                                                    foreach($arr as $k=>$v) {
+                                                                        $str = '';
+                                                                        if ( !empty($obj["value"]) )
+                                                                            if ( strpos( $obj["value"], trim($v) ) !== false ) $str = 'checked="checked"';
+                                                                        echo '<label>';
+                                                                        echo '<input '.$str.' name="'.$obj['ename'].'" type="radio" class="inverted" value="'.$v.'" style="margin-right: 10px;">';
+                                                                        echo '<span class="text">'.$v.'</span>';
+                                                                        echo '</label>';
+                                                                    }
+                                                                    {/php}
+                                                                </div>
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="checkbox"}
+                                                                <div class="checkbox">
+                                                                    {php}
+                                                                        $arr = explode(',', $obj["values"]);
+                                                                        foreach($arr as $k=>$v) {
+                                                                            $str = '';
+                                                                            if ( !empty($obj["value"]) )
+                                                                                if ( strpos( $obj["value"], trim($v) ) !== false ) $str = 'checked="checked"';
+                                                                            echo '<label>';
+                                                                            echo '<input '.$str.' name="'.$obj['ename'].'[]" type="checkbox" class="inverted" value="'.$v.'" style="margin-right: 10px;">';
+                                                                            echo '<span class="text">'.$v.'</span>';
+                                                                            echo '</label>';
+                                                                        }
+                                                                    {/php}
+                                                                </div>
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="select"}
+                                                                    <select name="{$obj.ename}">
+                                                                    <option value="">请选择</option>
+                                                                    {php}
+                                                                        $arr = explode(',', $obj["values"]);
+                                                                        foreach($arr as $k=>$v) {
+                                                                            $str = '';
+                                                                            if ( !empty($obj["value"]) )
+                                                                                if ( strpos( $obj["value"], trim($v) ) !== false ) $str = 'selected="selected"';
+                                                                            echo '<option '.$str.' value="'.$v.'">'.$v.'</option>';
+                                                                        }
+                                                                    {/php}
+                                                                    </select>
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="file"}
+                                                                    <input name="{$obj.ename}" class="form-control _logo" type="file" style="border: none;">
+                                                                    {empty name="$obj.value"}暂无图片{/empty}
+                                                                    {notempty name="obj.value"}<img class="img_logo" src="__STATIC__uploads/{$obj.value}" style="height: 35px;">{/notempty}
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="textarea"}
+                                                                    <textarea class="form-control" name="{$obj.ename}">{$obj.value}</textarea>
+                                                                {/eq}
+                                                            </div>
+                                                        </div>
+                                                        {/volist}
+                                                        <div class="form-group">
+                                                            <div class="col-sm-offset-2 col-sm-10">
+                                                                <button type="submit" class="btn btn-default">保存信息</button>
+                                                            </div>
+                                                        </div>
+                                                   <!--  </form> -->
+                                                </div>
+                                            </div>
+
+                                            <div id="profile11" class="tab-pane">
+                                                <div class="form-horizontal">
+                                                    <!-- <form class="form-horizontal" role="form" action="../conf/confsave" method="post" enctype="multipart/form-data"> -->
+                                                        {volist name=':model("conf")->where("conf_type=2")->order("sort desc")->all()' id='obj'}
+                                                        <div class="form-group">
+                                                            <label for="username" class="col-sm-2 control-label no-padding-right">{$obj.cname}</label>
+                                                            <div class="col-sm-6">
+                                                                {eq name="obj.form_type" value="input"}
+                                                                <input class="form-control" placeholder="" name="{$obj.ename}" type="text" value="{$obj.value}">
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="radio"}
+                                                                <div class="ardio">
+                                                                    {php}
+                                                                    $arr = explode(',', $obj["values"]);
+                                                                    foreach($arr as $k=>$v) {
+                                                                        $str = '';
+                                                                        if ( !empty($obj["value"]) )
+                                                                            if ( strpos( $obj["value"], trim($v) ) !== false ) $str = 'checked="checked"';
+                                                                        echo '<label>';
+                                                                        echo '<input '.$str.' name="'.$obj['ename'].'" type="radio" class="inverted" value="'.$v.'">';
+                                                                        echo '<span class="text">'.$v.'</span>';
+                                                                        echo '</label>';
+                                                                    }
+                                                                    {/php}
+                                                                </div>
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="checkbox"}
+                                                                <div class="checkbox">
+                                                                    {php}
+                                                                        $arr = explode(',', $obj["values"]);
+                                                                        foreach($arr as $k=>$v) {
+                                                                            $str = '';
+                                                                            if ( !empty($obj["value"]) )
+                                                                                if ( strpos( $obj["value"], trim($v) ) !== false ) $str = 'checked="checked"';
+                                                                            echo '<label>';
+                                                                            echo '<input '.$str.' name="'.$obj['ename'].'[]" type="checkbox" class="inverted" value="'.$v.'">';
+                                                                            echo '<span class="text">'.$v.'</span>';
+                                                                            echo '</label>';
+                                                                        }
+                                                                    {/php}
+                                                                </div>
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="select"}
+                                                                    <select name="{$obj.ename}">
+                                                                    <option value="">请选择</option>
+                                                                    {php}
+                                                                        $arr = explode(',', $obj["values"]);
+                                                                        foreach($arr as $k=>$v) {
+                                                                            $str = '';
+                                                                            if ( !empty($obj["value"]) )
+                                                                                if ( strpos( $obj["value"], trim($v) ) !== false ) $str = 'selected="selected"';
+                                                                            echo '<option '.$str.' value="'.$v.'">'.$v.'</option>';
+                                                                        }
+                                                                    {/php}
+                                                                    </select>
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="file"}
+                                                                    <input name="{$obj.ename}" class="form-control _logo" type="file" style="border: none;">
+                                                                    {empty name="$obj.value"}暂无图片{/empty}
+                                                                    {notempty name="obj.value"}<img class="img_logo" src="__STATIC__uploads/{$obj.value}" style="height: 35px;">{/notempty}
+                                                                {/eq}
+                                                                {eq name="obj.form_type" value="textarea"}
+                                                                    <textarea class="form-control" name="{$obj.ename}">{$obj.value}</textarea>
+                                                                {/eq}
+                                                            </div>
+                                                        </div>
+                                                        {/volist}
+                                                        <div class="form-group">
+                                                            <div class="col-sm-offset-2 col-sm-10">
+                                                                <button type="submit" class="btn btn-default">保存信息</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+    </div>  
+</div>
+
+
+<script>
+$(function() {
+    //上传图片就删除显示图片dom
+    $('._logo').on('input', function() {
+        $('.img_logo').eq($(this).index()).remove();
+    })
+
+    //解决上传后没提交 刷新之后同时出现图片和上传文件的问题
+    for (var i = 0; i < $('._logo').length; i++) {
+          if (  $('._logo').eq(i).val() != '' ) $('.img_logo').eq(i).remove();
+  }
+})
+</script>

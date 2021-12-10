@@ -1,7 +1,9 @@
 <?
 namespace app\admin\model;
-use think\model\Pivot;
+use think\Model;
 
 
-class MemberPrice extends Pivot{}
-
+class MemberPrice extends Model
+{
+	
+}
